@@ -4,7 +4,6 @@ import Fontisto from "@expo/vector-icons/Fontisto";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Entypo } from "@expo/vector-icons";
-import { View } from "react-native";
 
 const TabLayout = () => {
   return (
@@ -17,12 +16,8 @@ const TabLayout = () => {
         tabBarStyle: {
           height: 64,
           paddingTop: 12,
-          elevation: 0.5,
-          shadowOpacity: 0.5,
-          shadowRadius: 5,
-          position: "absolute",
-          margin: 16,
-          borderRadius: 100,
+          borderTopStartRadius: 24,
+          borderTopEndRadius: 24,
         },
       }}
     >

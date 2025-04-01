@@ -14,7 +14,6 @@ const GlobalStyles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 16,
   },
   titlePrimary: {
     fontSize: 24,
@@ -51,6 +50,28 @@ const GlobalStyles = StyleSheet.create({
   },
   btnSecondaryText: {
     color: Colors.primary,
+  },
+  card: {
+    flexDirection: "row",
+    gap: 16,
+    padding: 16,
+    backgroundColor: "#fff",
+    borderRadius: 16,
+    marginBottom: 16,
+    height: 144,
+  },
+  cardContainer: {
+    flexDirection: "column",
+    justifyContent: "center",
+  },
+  cardTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 8,
+  },
+  cardContentContainer: {
+    flexDirection: "row",
+    gap: 8,
   },
 });
 
