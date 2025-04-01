@@ -7,11 +7,9 @@ export default function IndexJahitan() {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={GlobalStyles.container} edges={["top"]}>
+        <Header />
         <ScrollView>
-          <View>
-            <Header />
-            <Text style={GlobalStyles.title}>Temukan Jahitan</Text>
-          </View>
+          <Text style={GlobalStyles.title}>Temukan Jahitan</Text>
         </ScrollView>
       </SafeAreaView>
     </SafeAreaProvider>

@@ -7,11 +7,9 @@ export default function About() {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={GlobalStyles.container} edges={["top"]}>
+        <Header />
         <ScrollView>
-          <View>
-            <Header />
-            <Text style={GlobalStyles.title}>About</Text>
-          </View>
+          <Text style={GlobalStyles.title}>About</Text>
         </ScrollView>
       </SafeAreaView>
     </SafeAreaProvider>

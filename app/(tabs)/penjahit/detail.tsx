@@ -7,9 +7,7 @@ export default function IndexPenjahit() {
     <SafeAreaProvider>
       <SafeAreaView style={GlobalStyles.container} edges={["top"]}>
         <ScrollView>
-          <View>
-            <Text>Detail Penjahit</Text>
-          </View>
+          <Text>Detail Penjahit</Text>
         </ScrollView>
       </SafeAreaView>
     </SafeAreaProvider>

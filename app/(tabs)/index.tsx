@@ -7,8 +7,8 @@ export default function Index() {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={GlobalStyles.container} edges={["top"]}>
+        <Header />
         <ScrollView>
-          <Header />
           <Text style={GlobalStyles.title}>Home</Text>
         </ScrollView>
       </SafeAreaView>
