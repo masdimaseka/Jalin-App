@@ -2,8 +2,14 @@ import { StyleSheet } from "react-native";
 import { Colors } from "./Colors";
 
 const GlobalStyles = StyleSheet.create({
+  appContainer: {
+    flex: 1,
+    backgroundColor: Colors.bg,
+  },
   container: {
     padding: 24,
+    flex: 1,
+    backgroundColor: Colors.bg,
   },
   title: {
     fontSize: 24,

@@ -1,7 +1,10 @@
+import { Colors } from "@/constant/Colors";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
+import { ScrollView } from "react-native";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -21,10 +24,15 @@ export default function RootLayout() {
   }
 
   return (
-    <Stack>
-      <Stack.Screen name="login" options={{ headerShown: false }} />
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      <Stack.Screen name="+not-found" options={{ title: "Oops!" }} />
-    </Stack>
+    <SafeAreaProvider>
+      <SafeAreaView
+        style={{ flex: 1, backgroundColor: Colors.bg }}
+        edges={["top"]}
+      >
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="+not-found" options={{ title: "Oops!" }} />
+        </Stack>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
