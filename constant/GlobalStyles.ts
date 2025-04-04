@@ -51,27 +51,56 @@ const GlobalStyles = StyleSheet.create({
   btnSecondaryText: {
     color: Colors.primary,
   },
+
   card: {
-    flexDirection: "row",
+    flexDirection: "column",
+    alignItems: "center",
     gap: 16,
-    padding: 16,
+    padding: 24,
     backgroundColor: "#fff",
     borderRadius: 16,
     marginBottom: 16,
-    height: 144,
   },
-  cardContainer: {
-    flexDirection: "column",
+  cardContentContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
     justifyContent: "center",
+    gap: 8,
+    marginTop: 8,
+    marginBottom: 8,
+  },
+  cardContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
   },
   cardTitle: {
     fontSize: 20,
     fontWeight: "bold",
-    marginBottom: 8,
+    textAlign: "center",
   },
-  cardContentContainer: {
+  cardCategory: {
+    borderWidth: 1,
+    borderRadius: 100,
+    paddingVertical: 4,
+    paddingHorizontal: 12,
+    borderColor: Colors.primary,
+  },
+  profileDescContainer: {
+    padding: 24,
+    backgroundColor: "#fff",
+    borderRadius: 16,
+  },
+  profileDesc: {
     flexDirection: "row",
-    gap: 8,
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  profileDescText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    textDecorationLine: "underline",
   },
 });
 
