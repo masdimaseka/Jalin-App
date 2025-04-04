@@ -15,6 +15,10 @@ const GlobalStyles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
   },
+  subTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+  },
   titlePrimary: {
     fontSize: 24,
     fontWeight: "bold",
@@ -98,9 +102,14 @@ const GlobalStyles = StyleSheet.create({
     justifyContent: "space-between",
   },
   profileDescText: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: "bold",
     textDecorationLine: "underline",
+  },
+  tabBarPenjahit: {
+    flexDirection: "row",
+    gap: 8,
+    marginVertical: 24,
   },
 });
 

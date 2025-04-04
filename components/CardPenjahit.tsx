@@ -1,23 +1,22 @@
 import { Colors } from "@/constant/Colors";
 import GlobalStyles from "@/constant/GlobalStyles";
 import { AntDesign, FontAwesome5, FontAwesome6 } from "@expo/vector-icons";
-import { View, Text, Image, TouchableHighlight } from "react-native";
+import { View, Text, Image } from "react-native";
 
 type CardPenjahitProps = {
-  name: string;
-  location: string;
-  rating: number;
-  paymentRate: string;
-  specialties: string[];
-  onPress?: () => void;
+  namaPenjahit: string;
+  lokasiPenjahit: string;
+  ratingPenjahit: number;
+  tarifJahit: string;
+  spesialisasiPenjahit: string[];
 };
 
 const CardPenjahit = ({
-  name,
-  location,
-  rating,
-  paymentRate,
-  specialties,
+  namaPenjahit,
+  lokasiPenjahit,
+  ratingPenjahit,
+  tarifJahit,
+  spesialisasiPenjahit,
 }: CardPenjahitProps) => {
   return (
     <View style={GlobalStyles.card}>
@@ -31,11 +30,11 @@ const CardPenjahit = ({
         />
       </View>
       <View>
-        <Text style={GlobalStyles.cardTitle}>{name}</Text>
+        <Text style={GlobalStyles.cardTitle}>{namaPenjahit}</Text>
         <View style={GlobalStyles.cardContentContainer}>
           <View style={GlobalStyles.cardContent}>
             <AntDesign name="star" size={12} color="orange" />
-            <Text>{rating}</Text>
+            <Text>{ratingPenjahit}</Text>
           </View>
           <View style={GlobalStyles.cardContent}>
             <FontAwesome5
@@ -43,7 +42,7 @@ const CardPenjahit = ({
               size={12}
               style={{ color: Colors.primary }}
             />
-            <Text>{paymentRate}</Text>
+            <Text>{tarifJahit}</Text>
           </View>
         </View>
         <View style={GlobalStyles.cardContent}>
@@ -52,11 +51,11 @@ const CardPenjahit = ({
             size={12}
             style={{ color: Colors.primary }}
           />
-          <Text>{location}</Text>
+          <Text>{lokasiPenjahit}</Text>
         </View>
         <View style={GlobalStyles.cardContentContainer}>
-          {specialties.length > 0 ? (
-            specialties.map((specialty, index) => (
+          {spesialisasiPenjahit.length > 0 ? (
+            spesialisasiPenjahit.map((specialty, index) => (
               <View key={index} style={GlobalStyles.cardCategory}>
                 <Text style={{ fontSize: 12 }}>{specialty}</Text>
               </View>

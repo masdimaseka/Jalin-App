@@ -1,8 +1,8 @@
 import CardPenjahit from "@/components/CardPenjahit";
 import Header from "@/components/Header";
 import SearchInput from "@/components/SearchInput";
-import { PENJAHIT_DATA, DataItem } from "@/constant/DataDummy";
 import GlobalStyles from "@/constant/GlobalStyles";
+import { DataItemPenjahit, PENJAHIT_DATA } from "@/data/DataPenjahitDummy";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { FlatList, Pressable, Text, View } from "react-native";
@@ -15,9 +15,9 @@ export default function IndexPenjahit() {
 
   const filteredData = PENJAHIT_DATA.filter(
     (item) =>
-      item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.specialties.some((specialty) =>
-        specialty.toLowerCase().includes(searchQuery.toLowerCase())
+      item.namaPenjahit.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.spesialisasiPenjahit.some((spesialisasi) =>
+        spesialisasi.toLowerCase().includes(searchQuery.toLowerCase())
       )
   );
 
@@ -36,25 +36,25 @@ export default function IndexPenjahit() {
 
       <FlatList
         data={filteredData}
-        renderItem={({ item }: { item: DataItem }) => (
+        renderItem={({ item }: { item: DataItemPenjahit }) => (
           <Pressable
             onPress={() =>
               router.push({
                 pathname: "/(tabs)/penjahit/[id]",
-                params: { id: item.id },
+                params: { id: item.idPenjahit },
               })
             }
           >
             <CardPenjahit
-              name={item.name}
-              location={item.location}
-              rating={item.rating}
-              paymentRate={item.paymentRate}
-              specialties={item.specialties}
+              namaPenjahit={item.namaPenjahit}
+              lokasiPenjahit={item.lokasiPenjahit}
+              ratingPenjahit={item.ratingPenjahit}
+              tarifJahit={item.tarifJahit}
+              spesialisasiPenjahit={item.spesialisasiPenjahit}
             />
           </Pressable>
         )}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.idPenjahit}
         initialNumToRender={5}
         ListEmptyComponent={
           <Text style={{ textAlign: "center", marginTop: 20 }}>

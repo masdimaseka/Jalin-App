@@ -1,18 +1,33 @@
+import CardPekerjaan from "@/components/CardPekerjaan";
 import CardPenjahit from "@/components/CardPenjahit";
-import { PENJAHIT_DATA } from "@/constant/DataDummy";
 import GlobalStyles from "@/constant/GlobalStyles";
-import { AntDesign } from "@expo/vector-icons";
-import { useLocalSearchParams } from "expo-router";
+import { DataItemPekerjaan, PEKERJAAN_DATA } from "@/data/DataPekerjaanDummy";
+import { PENJAHIT_DATA } from "@/data/DataPenjahitDummy";
+import { AntDesign, Ionicons } from "@expo/vector-icons";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
-import { Pressable, ScrollView, Text, View } from "react-native";
+import { FlatList, Pressable, ScrollView, Text, View } from "react-native";
 
 export default function DetailPenjahit() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const [showDesc, setShowDesc] = useState(false);
 
-  const detailData = PENJAHIT_DATA.find((item) => item.id === id);
+  const router = useRouter();
+
+  const detailData = PENJAHIT_DATA.find((item) => item.idPenjahit === id);
+  const pekerjaanData = PEKERJAAN_DATA.filter(
+    (item) => item.dataPenjahit.idPenjahit === id
+  );
 
   if (!detailData) {
+    return (
+      <Text style={{ textAlign: "center", marginTop: 20 }}>
+        Data tidak ditemukan
+      </Text>
+    );
+  }
+
+  if (!pekerjaanData) {
     return (
       <Text style={{ textAlign: "center", marginTop: 20 }}>
         Data tidak ditemukan
@@ -28,12 +43,13 @@ export default function DetailPenjahit() {
     <View style={GlobalStyles.container}>
       <ScrollView>
         <CardPenjahit
-          name={detailData.name}
-          location={detailData.location}
-          rating={detailData.rating}
-          paymentRate={detailData.paymentRate}
-          specialties={detailData.specialties}
+          namaPenjahit={detailData.namaPenjahit}
+          lokasiPenjahit={detailData.lokasiPenjahit}
+          ratingPenjahit={detailData.ratingPenjahit}
+          tarifJahit={detailData.tarifJahit}
+          spesialisasiPenjahit={detailData.spesialisasiPenjahit}
         />
+
         <View style={GlobalStyles.profileDescContainer}>
           <Pressable onPress={handleShowDesc} style={GlobalStyles.profileDesc}>
             <Text style={GlobalStyles.profileDescText}>
@@ -47,9 +63,33 @@ export default function DetailPenjahit() {
           </Pressable>
           {showDesc && (
             <View style={{ marginTop: 12 }}>
-              <Text style={{ textAlign: "justify" }}>{detailData.desc}</Text>
+              <Text style={{ textAlign: "justify" }}>
+                {detailData.deskripsiPenjahit}
+              </Text>
             </View>
           )}
+        </View>
+
+        <Pressable style={[GlobalStyles.btnPrimary, { marginVertical: 24 }]}>
+          <Ionicons name="chatbubble-ellipses" size={16} color="white" />
+          <Text style={GlobalStyles.btnPrimaryText}>Hubungi Penjahit</Text>
+        </Pressable>
+
+        <View style={GlobalStyles.profileDescContainer}>
+          <Text style={GlobalStyles.subTitle}>Daftar Pekerjaan</Text>
+          <View style={{ marginTop: 16 }}>
+            {pekerjaanData.map((item: DataItemPekerjaan) => (
+              <View key={item.idTransaksi}>
+                <CardPekerjaan
+                  dataUser={item.dataUser}
+                  dataPenjahit={item.dataPenjahit}
+                  judulPekerjaan={item.judulPekerjaan}
+                  deadlinePengerjaan={item.deadlinePengerjaan}
+                  statusPekerjaan={item.statusPekerjaan}
+                />
+              </View>
+            ))}
+          </View>
         </View>
       </ScrollView>
     </View>
