@@ -1,16 +1,9 @@
+import AboutUs from "@/components/AboutUs";
+import ContactUs from "@/components/ContactUs";
 import Header from "@/components/Header";
 import GlobalStyles from "@/styles/GlobalStyles";
+import { ScrollView, Text } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  Button,
-  ScrollView,
-  StyleSheet,
-  Image,
-} from "react-native";
 
 export default function About() {
   return (
@@ -18,18 +11,9 @@ export default function About() {
       <SafeAreaView style={GlobalStyles.container} edges={["top"]}>
         <Header />
         <ScrollView>
-          <Text style={GlobalStyles.title}>About Us</Text>
-
-          <View>
-            <Text>
-              We are a company dedicated to providing high-quality services to
-              our customers.
-            </Text>
-            <Text>
-              Our mission is to deliver the best experience with innovation and
-              integrity.
-            </Text>
-          </View>
+          <Text style={GlobalStyles.title}>About</Text>
+          <AboutUs />
+          <ContactUs />
         </ScrollView>
       </SafeAreaView>
     </SafeAreaProvider>
