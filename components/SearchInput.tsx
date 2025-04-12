@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, TextInput, TouchableOpacity } from "react-native";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
-import GlobalStyles from "@/constant/GlobalStyles";
+import GlobalStyles from "@/styles/GlobalStyles";
 
 type SearchInputProps = {
   openSearchBar: boolean;

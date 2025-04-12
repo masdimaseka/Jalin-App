@@ -1,5 +1,6 @@
 import { Colors } from "@/constant/Colors";
-import GlobalStyles from "@/constant/GlobalStyles";
+import CardStyles from "@/styles/CardStyles";
+import GlobalStyles from "@/styles/GlobalStyles";
 import { AntDesign, FontAwesome5, FontAwesome6 } from "@expo/vector-icons";
 import { View, Text, Image } from "react-native";
 
@@ -19,7 +20,7 @@ const CardPenjahit = ({
   spesialisasiPenjahit,
 }: CardPenjahitProps) => {
   return (
-    <View style={GlobalStyles.card}>
+    <View style={CardStyles.card}>
       <View>
         <Image
           source={require("@/assets/images/avatar.png")}
@@ -30,13 +31,13 @@ const CardPenjahit = ({
         />
       </View>
       <View>
-        <Text style={GlobalStyles.cardTitle}>{namaPenjahit}</Text>
-        <View style={GlobalStyles.cardContentContainer}>
-          <View style={GlobalStyles.cardContent}>
+        <Text style={CardStyles.cardTitle}>{namaPenjahit}</Text>
+        <View style={CardStyles.cardContentContainer}>
+          <View style={CardStyles.cardContent}>
             <AntDesign name="star" size={12} color="orange" />
             <Text>{ratingPenjahit}</Text>
           </View>
-          <View style={GlobalStyles.cardContent}>
+          <View style={CardStyles.cardContent}>
             <FontAwesome5
               name="money-bill-wave"
               size={12}
@@ -45,7 +46,7 @@ const CardPenjahit = ({
             <Text>{tarifJahit}</Text>
           </View>
         </View>
-        <View style={GlobalStyles.cardContent}>
+        <View style={CardStyles.cardContent}>
           <FontAwesome6
             name="location-dot"
             size={12}
@@ -53,10 +54,10 @@ const CardPenjahit = ({
           />
           <Text>{lokasiPenjahit}</Text>
         </View>
-        <View style={GlobalStyles.cardContentContainer}>
+        <View style={CardStyles.cardContentContainer}>
           {spesialisasiPenjahit.length > 0 ? (
             spesialisasiPenjahit.map((specialty, index) => (
-              <View key={index} style={GlobalStyles.cardCategory}>
+              <View key={index} style={CardStyles.cardCategory}>
                 <Text style={{ fontSize: 12 }}>{specialty}</Text>
               </View>
             ))

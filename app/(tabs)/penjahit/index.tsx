@@ -1,7 +1,7 @@
 import CardPenjahit from "@/components/CardPenjahit";
 import Header from "@/components/Header";
 import SearchInput from "@/components/SearchInput";
-import GlobalStyles from "@/constant/GlobalStyles";
+import GlobalStyles from "@/styles/GlobalStyles";
 import { DataItemPenjahit, PENJAHIT_DATA } from "@/data/DataPenjahitDummy";
 import { useRouter } from "expo-router";
 import { useState } from "react";

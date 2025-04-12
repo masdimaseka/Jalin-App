@@ -1,12 +1,13 @@
 import CardPekerjaan from "@/components/CardPekerjaan";
 import CardPenjahit from "@/components/CardPenjahit";
-import GlobalStyles from "@/constant/GlobalStyles";
+import GlobalStyles from "@/styles/GlobalStyles";
 import { DataItemPekerjaan, PEKERJAAN_DATA } from "@/data/DataPekerjaanDummy";
 import { PENJAHIT_DATA } from "@/data/DataPenjahitDummy";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
-import { FlatList, Pressable, ScrollView, Text, View } from "react-native";
+import { Pressable, ScrollView, Text, View } from "react-native";
+import ProfileStyles from "@/styles/ProfileStyles";
 
 export default function DetailPenjahit() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -50,9 +51,9 @@ export default function DetailPenjahit() {
           spesialisasiPenjahit={detailData.spesialisasiPenjahit}
         />
 
-        <View style={GlobalStyles.profileDescContainer}>
-          <Pressable onPress={handleShowDesc} style={GlobalStyles.profileDesc}>
-            <Text style={GlobalStyles.profileDescText}>
+        <View style={ProfileStyles.profileDescContainer}>
+          <Pressable onPress={handleShowDesc} style={ProfileStyles.profileDesc}>
+            <Text style={ProfileStyles.profileDescText}>
               Lihat Deskripsi Penjahit
             </Text>
             {showDesc ? (
@@ -75,7 +76,7 @@ export default function DetailPenjahit() {
           <Text style={GlobalStyles.btnPrimaryText}>Hubungi Penjahit</Text>
         </Pressable>
 
-        <View style={GlobalStyles.profileDescContainer}>
+        <View style={ProfileStyles.profileDescContainer}>
           <Text style={GlobalStyles.subTitle}>Daftar Pekerjaan</Text>
           <View style={{ marginTop: 16 }}>
             {pekerjaanData.map((item: DataItemPekerjaan) => (

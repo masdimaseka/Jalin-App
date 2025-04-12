@@ -1,5 +1,5 @@
 import Header from "@/components/Header";
-import GlobalStyles from "@/constant/GlobalStyles";
+import GlobalStyles from "@/styles/GlobalStyles";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import React, { useState } from "react";
 import {
@@ -18,7 +18,7 @@ export default function About() {
       <SafeAreaView style={GlobalStyles.container} edges={["top"]}>
         <Header />
         <ScrollView>
-          <Text style={GlobalStyles.title}>About</Text>
+          <Text style={GlobalStyles.title}>About Us</Text>
 
           <View>
             <Text>
