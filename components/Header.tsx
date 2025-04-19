@@ -18,7 +18,7 @@ const Header = () => {
         source={require("@/assets/images/jalin-biru.png")}
         style={{ width: 70, height: 40 }}
       />
-      <TouchableOpacity onPress={() => router.push("/login")}>
+      <TouchableOpacity onPress={() => router.push("/profile")}>
         <Image
           source={require("@/assets/images/avatar.png")}
           style={{ width: 32, height: 32 }}

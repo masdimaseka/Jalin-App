@@ -29,6 +29,14 @@ export default function RootLayout() {
         edges={["top"]}
       >
         <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="profile"
+            options={{
+              title: "Profile",
+              headerShown: true,
+            }}
+          />
           <Stack.Screen name="+not-found" options={{ title: "Oops!" }} />
         </Stack>
       </SafeAreaView>
