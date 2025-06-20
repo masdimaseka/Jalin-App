@@ -1,29 +1,62 @@
 import { useRouter } from "expo-router";
-import {
-  Pressable,
-  Text,
-  TextInput,
-  View,
-  Dimensions,
-  StyleSheet,
-  ImageBackground,
+import { TouchableOpacity, Text, TextInput, View, Dimensions, StyleSheet, ActivityIndicator,
 } from "react-native";
 import { useState } from "react";
+import { FIREBASE_AUTH, FIREBASE_DB } from '../../FirebaseConfig';
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+  updateProfile,
+} from 'firebase/auth';
+import { doc, setDoc } from "firebase/firestore";
 import { Colors } from "@/constant/Colors";
 
 export default function Signup() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
+  const [noHp, setNoHp] = useState("");
+  const [loading, setLoading] = useState(false);
+  const auth = FIREBASE_AUTH;
 
-  const handleSignUp = () => {
-    if (!email || !password) {
-      alert(`Semua field harus diisi`);
+  const handleSignUp = async () => {
+    if (!email || !password || !username || !noHp) {
+      alert('Peringatan: Semua field harus diisi');
       return;
     }
 
-    alert(`Akun berhasil dibuat dengan email ${email}`);
-    router.push("/login");
+    setLoading(true);
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      // Update displayName di Firebase Auth
+      await updateProfile(user, { displayName: username });
+
+      // Simpan info tambahan ke Firestore
+      await setDoc(doc(FIREBASE_DB, "users", user.uid), {
+        uid: user.uid,
+        email,
+        username,
+        noHp,
+        createdAt: new Date(),
+      });
+
+      // Kirim email verifikasi
+      await sendEmailVerification(user);
+
+      console.log("User registered:", user);
+      alert("Sukses! Akun berhasil dibuat. Silakan cek email untuk verifikasi.");
+
+      // Redirect ke halaman login
+      router.push("/(auth)/login");
+    } catch (error: any) {
+      console.error("Error registering:", error);
+      alert("Gagal daftar: " + error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -45,14 +78,31 @@ export default function Signup() {
           value={password}
           onChangeText={setPassword}
         />
+        <TextInput
+          style={styles.input}
+          placeholder="Username"
+          value={username}
+          onChangeText={setUsername}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Nomor HP"
+          value={noHp}
+          onChangeText={setNoHp}
+          keyboardType="phone-pad"
+        />
 
-        <Pressable style={styles.signupButton} onPress={handleSignUp}>
-          <Text style={styles.signupText}>Sign Up</Text>
-        </Pressable>
+        <TouchableOpacity style={styles.signupButton} onPress={handleSignUp}>
+          {loading ? (
+            <ActivityIndicator color="#fff" />
+          ) : (
+            <Text style={styles.signupText}>Sign Up</Text>
+          )}
+        </TouchableOpacity>
 
         <Text style={styles.loginText}>
           Already have an account?{" "}
-          <Text style={styles.loginLink} onPress={() => router.push("/login")}>
+          <Text style={styles.loginLink} onPress={() => router.push("/(auth)/login")}>
             Login
           </Text>
         </Text>
@@ -68,13 +118,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
   },
-  background: {
-    width: "100%",
-    height: height * 0.5,
-    position: "relative",
-    alignItems: "center",
-    justifyContent: "center",
-  },
   title: {
     fontSize: 32,
     fontWeight: "bold",
@@ -85,10 +128,7 @@ const styles = StyleSheet.create({
   },
   formContainer: {
     flex: 1,
-    backgroundColor: "#fff",
     paddingHorizontal: 20,
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
     alignItems: "center",
   },
   input: {
