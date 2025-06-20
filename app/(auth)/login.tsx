@@ -1,11 +1,14 @@
 import { Colors } from "@/constant/Colors";
 import { useRouter } from "expo-router";
 import { useState } from "react";
+import { FIREBASE_AUTH } from '../../FirebaseConfig';
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword }
+from 'firebase/auth';
 import {
   View,
   Text,
   TextInput,
-  Pressable,
+  TouchableOpacity,
   Dimensions,
   StyleSheet,
 } from "react-native";
@@ -14,16 +17,36 @@ export default function Login() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const auth = FIREBASE_AUTH;
 
-  const handleLogin = () => {
-    if (!email || !password) {
-      alert(`Lengkapi email dan password`);
+ const handleLogin = async () => {
+  if (!email || !password) {
+    alert(`Lengkapi email dan password`);
+    return;
+  }
+
+  setLoading(true);
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+
+    // ✅ Cek apakah email sudah diverifikasi
+    if (!user.emailVerified) {
+      alert("Email belum diverifikasi. Silakan cek email dan klik link verifikasi.");
+      await auth.signOut(); // keluarin user yang belum verified
       return;
     }
 
-    alert(`Login berhasil untuk ${email}`);
-    router.push("/(tabs)");
-  };
+    console.log('Login sukses:', user);
+    router.push("/(tabs)"); // ganti dengan rute dashboard kamu
+  } catch (error: any) {
+    console.error("Login gagal:", error);
+    alert("Gagal login: " + error.message);
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <View style={styles.container}>
@@ -45,9 +68,9 @@ export default function Login() {
           onChangeText={setPassword}
         />
 
-        <Pressable style={styles.loginButton} onPress={handleLogin}>
+        <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
           <Text style={styles.loginText}>Login</Text>
-        </Pressable>
+        </TouchableOpacity>
 
         <Text style={styles.signupText}>
           Don't have an account?{" "}
