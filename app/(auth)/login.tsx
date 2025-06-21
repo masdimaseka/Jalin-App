@@ -1,9 +1,8 @@
-import { Colors } from "@/constant/Colors";
-import { useRouter } from "expo-router";
-import { useState } from "react";
-import { FIREBASE_AUTH } from '../../FirebaseConfig';
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword }
-from 'firebase/auth';
+import { Colors } from "@/constant/theme";
+import { useRouter, Redirect } from "expo-router";
+import { useContext, useEffect, useState } from "react";
+import { auth } from "@/config/firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import {
   View,
   Text,
@@ -11,42 +10,56 @@ import {
   TouchableOpacity,
   Dimensions,
   StyleSheet,
+  ActivityIndicator,
 } from "react-native";
+import { AuthContext } from "@/context/AuthContext";
 
 export default function Login() {
   const router = useRouter();
+  const { user, loading } = useContext(AuthContext);
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const auth = FIREBASE_AUTH;
+  const [loginLoading, setLoginLoading] = useState(false);
 
- const handleLogin = async () => {
-  if (!email || !password) {
-    alert(`Lengkapi email dan password`);
-    return;
+  if (loading) return null;
+
+  if (user?.emailVerified) {
+    return <Redirect href="/(app)/(tabs)" />;
   }
 
-  setLoading(true);
-  try {
-    const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    const user = userCredential.user;
-
-    // ✅ Cek apakah email sudah diverifikasi
-    if (!user.emailVerified) {
-      alert("Email belum diverifikasi. Silakan cek email dan klik link verifikasi.");
-      await auth.signOut(); // keluarin user yang belum verified
+  const handleLogin = async () => {
+    if (!email || !password) {
+      alert(`Lengkapi email dan password`);
       return;
     }
 
-    console.log('Login sukses:', user);
-    router.push("/(tabs)"); // ganti dengan rute dashboard kamu
-  } catch (error: any) {
-    console.error("Login gagal:", error);
-    alert("Gagal login: " + error.message);
-  } finally {
-    setLoading(false);
-  }
-};
+    setLoginLoading(true);
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
+
+      if (!user.emailVerified) {
+        alert(
+          "Email belum diverifikasi. Silakan cek email dan klik link verifikasi."
+        );
+        await auth.signOut();
+        return;
+      }
+
+      console.log("Login sukses:", user);
+      router.replace("/(app)/(tabs)");
+    } catch (error: any) {
+      console.error("Login gagal:", error);
+      alert("Gagal login: " + error.message);
+    } finally {
+      setLoginLoading(false);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -59,6 +72,7 @@ export default function Login() {
           value={email}
           onChangeText={setEmail}
           keyboardType="email-address"
+          autoCapitalize="none"
         />
         <TextInput
           style={styles.input}
@@ -69,16 +83,26 @@ export default function Login() {
         />
 
         <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-          <Text style={styles.loginText}>Login</Text>
+          <Text style={styles.loginText}>
+            {loginLoading ? "Logging in..." : "Login"}
+          </Text>
         </TouchableOpacity>
+
+        {loginLoading && (
+          <ActivityIndicator
+            size="small"
+            color={Colors.primary}
+            style={{ marginTop: 10 }}
+          />
+        )}
 
         <Text style={styles.signupText}>
           Don't have an account?{" "}
           <Text
             style={styles.signupLink}
-            onPress={() => router.push("/signup")}
+            onPress={() => router.push("/(auth)/signup")}
           >
-            SignUp
+            Sign Up
           </Text>
         </Text>
       </View>

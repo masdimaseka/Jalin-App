@@ -1,4 +1,4 @@
-import { Colors } from "@/constant/Colors";
+import { Colors } from "@/constant/theme";
 import { Tabs } from "expo-router";
 import Fontisto from "@expo/vector-icons/Fontisto";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";

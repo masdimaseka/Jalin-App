@@ -1,61 +1,70 @@
-import { useRouter } from "expo-router";
-import { TouchableOpacity, Text, TextInput, View, Dimensions, StyleSheet, ActivityIndicator,
+import { useRouter, Redirect } from "expo-router";
+import {
+  TouchableOpacity,
+  Text,
+  TextInput,
+  View,
+  Dimensions,
+  StyleSheet,
+  ActivityIndicator,
 } from "react-native";
-import { useState } from "react";
-import { FIREBASE_AUTH, FIREBASE_DB } from '../../FirebaseConfig';
+import { useState, useContext } from "react";
+import { auth, db } from "@/config/firebase";
 import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
   updateProfile,
-} from 'firebase/auth';
+} from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
-import { Colors } from "@/constant/Colors";
+import { Colors } from "@/constant/theme";
+import { AuthContext } from "@/context/AuthContext";
 
 export default function Signup() {
   const router = useRouter();
+  const { user, loading } = useContext(AuthContext);
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const [noHp, setNoHp] = useState("");
-  const [loading, setLoading] = useState(false);
-  const auth = FIREBASE_AUTH;
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  if (loading) return null;
 
   const handleSignUp = async () => {
     if (!email || !password || !username || !noHp) {
-      alert('Peringatan: Semua field harus diisi');
+      alert("Peringatan: Semua field harus diisi");
       return;
     }
 
-    setLoading(true);
+    setIsSubmitting(true);
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
       const user = userCredential.user;
 
-      // Update displayName di Firebase Auth
       await updateProfile(user, { displayName: username });
 
-      // Simpan info tambahan ke Firestore
-      await setDoc(doc(FIREBASE_DB, "users", user.uid), {
+      await setDoc(doc(db, "users", user.uid), {
         uid: user.uid,
         email,
         username,
         noHp,
-        createdAt: new Date(),
+        createdAt: new Date().toISOString(),
       });
 
-      // Kirim email verifikasi
       await sendEmailVerification(user);
 
-      console.log("User registered:", user);
-      alert("Sukses! Akun berhasil dibuat. Silakan cek email untuk verifikasi.");
-
-      // Redirect ke halaman login
+      alert("Akun berhasil dibuat! Silakan verifikasi melalui email.");
       router.push("/(auth)/login");
     } catch (error: any) {
       console.error("Error registering:", error);
       alert("Gagal daftar: " + error.message);
     } finally {
-      setLoading(false);
+      setIsSubmitting(false);
     }
   };
 
@@ -70,6 +79,7 @@ export default function Signup() {
           value={email}
           onChangeText={setEmail}
           keyboardType="email-address"
+          autoCapitalize="none"
         />
         <TextInput
           style={styles.input}
@@ -93,7 +103,7 @@ export default function Signup() {
         />
 
         <TouchableOpacity style={styles.signupButton} onPress={handleSignUp}>
-          {loading ? (
+          {isSubmitting ? (
             <ActivityIndicator color="#fff" />
           ) : (
             <Text style={styles.signupText}>Sign Up</Text>
@@ -102,7 +112,10 @@ export default function Signup() {
 
         <Text style={styles.loginText}>
           Already have an account?{" "}
-          <Text style={styles.loginLink} onPress={() => router.push("/(auth)/login")}>
+          <Text
+            style={styles.loginLink}
+            onPress={() => router.push("/(auth)/login")}
+          >
             Login
           </Text>
         </Text>

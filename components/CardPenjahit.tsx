@@ -1,4 +1,4 @@
-import { Colors } from "@/constant/Colors";
+import { Colors } from "@/constant/theme";
 import CardStyles from "@/styles/CardStyles";
 import GlobalStyles from "@/styles/GlobalStyles";
 import { AntDesign, FontAwesome5, FontAwesome6 } from "@expo/vector-icons";

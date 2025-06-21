@@ -1,31 +1,58 @@
-import { Colors } from "@/constant/Colors";
+import { Colors } from "@/constant/theme";
 import CardStyles from "@/styles/CardStyles";
 import GlobalStyles from "@/styles/GlobalStyles";
 import { FontAwesome, FontAwesome6 } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Image, Pressable, Text, View } from "react-native";
-import { FIREBASE_AUTH, FIREBASE_DB } from "@/FirebaseConfig";
+import { auth, db } from "@/config/firebase";
 import { doc, getDoc } from "firebase/firestore";
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 
-const profile = () => {
+const Profile = () => {
   const router = useRouter();
   const [userData, setUserData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, async (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        const docRef = doc(FIREBASE_DB, "users", user.uid);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          setUserData(docSnap.data());
+        try {
+          const docRef = doc(db, "users", user.uid);
+          const docSnap = await getDoc(docRef);
+          if (docSnap.exists()) {
+            setUserData(docSnap.data());
+          }
+        } catch (error) {
+          console.error("Gagal mengambil data user:", error);
+        } finally {
+          setLoading(false);
         }
+      } else {
+        router.replace("/(auth)/login");
       }
     });
 
     return unsubscribe;
   }, []);
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      router.replace("/(auth)/login");
+    } catch (err) {
+      console.error("Gagal logout:", err);
+      alert("Gagal logout");
+    }
+  };
+
+  if (loading) {
+    return (
+      <View style={GlobalStyles.container}>
+        <Text>Loading...</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={GlobalStyles.container}>
@@ -33,10 +60,7 @@ const profile = () => {
         <View>
           <Image
             source={require("@/assets/images/avatar.png")}
-            style={{
-              width: 80,
-              height: 80,
-            }}
+            style={{ width: 80, height: 80 }}
           />
         </View>
         <View>
@@ -63,6 +87,7 @@ const profile = () => {
           </View>
         </View>
       </View>
+
       <Pressable
         style={[
           GlobalStyles.btnPrimary,
@@ -71,12 +96,13 @@ const profile = () => {
       >
         <Text style={GlobalStyles.btnPrimaryText}>Edit Profile</Text>
       </Pressable>
+
       <Pressable
         style={[
           GlobalStyles.btnPrimary,
           { marginTop: 2, backgroundColor: "red" },
         ]}
-        onPress={() => router.push("/login")}
+        onPress={handleLogout}
       >
         <Text style={GlobalStyles.btnPrimaryText}>Log Out</Text>
       </Pressable>
@@ -84,4 +110,4 @@ const profile = () => {
   );
 };
 
-export default profile;
+export default Profile;
