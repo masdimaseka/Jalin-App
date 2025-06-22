@@ -1,10 +1,10 @@
 import { Colors } from "@/constant/theme";
 import CardStyles from "@/styles/CardStyles";
 import GlobalStyles from "@/styles/GlobalStyles";
-import { FontAwesome, FontAwesome6 } from "@expo/vector-icons";
+import { FontAwesome, FontAwesome6, MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { Image, Pressable, Text, View } from "react-native";
+import { ActivityIndicator, Image, Pressable, Text, View } from "react-native";
 import { auth, db } from "@/config/firebase";
 import { doc, getDoc } from "firebase/firestore";
 import { onAuthStateChanged, signOut } from "firebase/auth";
@@ -46,13 +46,7 @@ const Profile = () => {
     }
   };
 
-  if (loading) {
-    return (
-      <View style={GlobalStyles.container}>
-        <Text>Loading...</Text>
-      </View>
-    );
-  }
+  if (loading) return <ActivityIndicator style={{ flex: 1 }} size="large" />;
 
   return (
     <View style={GlobalStyles.container}>
@@ -65,7 +59,7 @@ const Profile = () => {
         </View>
         <View>
           <Text style={CardStyles.cardTitle}>
-            {userData?.username || "Nama Pengguna"}
+            {userData?.nama || "Nama Pengguna"}
           </Text>
           <View style={CardStyles.cardContentContainer}>
             <View style={CardStyles.cardContent}>
@@ -74,28 +68,27 @@ const Profile = () => {
                 size={16}
                 style={{ color: Colors.primary }}
               />
-              <Text>{userData?.noHp || "-"}</Text>
+              <Text>{userData?.noTelp || "-"}</Text>
             </View>
             <View style={CardStyles.cardContent}>
-              <FontAwesome6
-                name="envelope"
-                size={12}
+              <MaterialIcons
+                name="email"
+                size={16}
                 style={{ color: Colors.primary }}
               />
               <Text>{userData?.email || "-"}</Text>
             </View>
+            <View style={CardStyles.cardContent}>
+              <FontAwesome6
+                name="map-location-dot"
+                size={16}
+                style={{ color: Colors.primary }}
+              />
+              <Text>{userData?.lokasi || "-"}</Text>
+            </View>
           </View>
         </View>
       </View>
-
-      <Pressable
-        style={[
-          GlobalStyles.btnPrimary,
-          { marginTop: 12, backgroundColor: "lightgray" },
-        ]}
-      >
-        <Text style={GlobalStyles.btnPrimaryText}>Edit Profile</Text>
-      </Pressable>
 
       <Pressable
         style={[
@@ -106,6 +99,43 @@ const Profile = () => {
       >
         <Text style={GlobalStyles.btnPrimaryText}>Log Out</Text>
       </Pressable>
+
+      {userData?.role !== "penjahit" ? (
+        <View style={[CardStyles.card2, { marginTop: 20 }]}>
+          <Text style={GlobalStyles.subTitle}>Ingin menjadi penjahit?</Text>
+          <Pressable
+            style={[GlobalStyles.btnPrimary]}
+            onPress={() => router.push("/(app)/register-penjahit")}
+          >
+            <Text style={GlobalStyles.btnPrimaryText}>Daftar Sekarang</Text>
+          </Pressable>
+        </View>
+      ) : (
+        <View style={[CardStyles.card2, { marginTop: 20 }]}>
+          <View
+            style={{
+              paddingBottom: 16,
+              marginBottom: 16,
+              borderBottomWidth: 1,
+              borderColor: "lightgray",
+            }}
+          >
+            <Text style={[CardStyles.cardTitle]}>Informasi Penjahit</Text>
+          </View>
+          <View>
+            <Text style={[GlobalStyles.subTitle, { marginBottom: 8 }]}>
+              Deskripsi penjahit
+            </Text>
+            <Text>{userData?.dataPenjahit?.deskripsi}</Text>
+          </View>
+          <View>
+            <Text style={[GlobalStyles.subTitle, { marginBottom: 8 }]}>
+              Rata-rata biaya jasa
+            </Text>
+            <Text>{userData?.dataPenjahit?.rataRataBiaya}</Text>
+          </View>
+        </View>
+      )}
     </View>
   );
 };

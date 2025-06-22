@@ -75,23 +75,6 @@ export default function DetailPenjahit() {
           <Ionicons name="chatbubble-ellipses" size={16} color="white" />
           <Text style={GlobalStyles.btnPrimaryText}>Hubungi Penjahit</Text>
         </Pressable>
-
-        <View style={ProfileStyles.profileDescContainer}>
-          <Text style={GlobalStyles.subTitle}>Daftar Pekerjaan</Text>
-          <View style={{ marginTop: 16 }}>
-            {pekerjaanData.map((item: DataItemPekerjaan) => (
-              <View key={item.idTransaksi}>
-                <CardPekerjaan
-                  dataUser={item.dataUser}
-                  dataPenjahit={item.dataPenjahit}
-                  judulPekerjaan={item.judulPekerjaan}
-                  deadlinePengerjaan={item.deadlinePengerjaan}
-                  statusPekerjaan={item.statusPekerjaan}
-                />
-              </View>
-            ))}
-          </View>
-        </View>
       </ScrollView>
     </View>
   );

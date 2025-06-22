@@ -7,10 +7,10 @@ import {
   View,
   Text,
   TextInput,
-  TouchableOpacity,
   Dimensions,
   StyleSheet,
   ActivityIndicator,
+  Pressable,
 } from "react-native";
 import { AuthContext } from "@/context/AuthContext";
 
@@ -63,7 +63,7 @@ export default function Login() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Login</Text>
+      <Text style={styles.title}>Log In</Text>
 
       <View style={styles.formContainer}>
         <TextInput
@@ -82,22 +82,14 @@ export default function Login() {
           onChangeText={setPassword}
         />
 
-        <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+        <Pressable style={styles.loginButton} onPress={handleLogin}>
           <Text style={styles.loginText}>
-            {loginLoading ? "Logging in..." : "Login"}
+            {loginLoading ? <ActivityIndicator color="#fff" /> : "Masuk"}
           </Text>
-        </TouchableOpacity>
-
-        {loginLoading && (
-          <ActivityIndicator
-            size="small"
-            color={Colors.primary}
-            style={{ marginTop: 10 }}
-          />
-        )}
+        </Pressable>
 
         <Text style={styles.signupText}>
-          Don't have an account?{" "}
+          Belum punya akun?{" "}
           <Text
             style={styles.signupLink}
             onPress={() => router.push("/(auth)/signup")}

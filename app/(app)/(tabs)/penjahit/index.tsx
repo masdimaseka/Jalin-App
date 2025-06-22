@@ -9,15 +9,20 @@ import { FlatList, Pressable, Text, View } from "react-native";
 
 export default function IndexPenjahit() {
   const [openSearchBar, setOpenSearchBar] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState(""); // teks yang sedang diketik
+  const [submittedQuery, setSubmittedQuery] = useState(""); // teks hasil submit
 
   const router = useRouter();
 
+  const handleSubmitSearch = (query: string) => {
+    setSubmittedQuery(query); // ini yang dipakai untuk filter
+  };
+
   const filteredData = PENJAHIT_DATA.filter(
     (item) =>
-      item.namaPenjahit.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.namaPenjahit.toLowerCase().includes(submittedQuery.toLowerCase()) ||
       item.spesialisasiPenjahit.some((spesialisasi) =>
-        spesialisasi.toLowerCase().includes(searchQuery.toLowerCase())
+        spesialisasi.toLowerCase().includes(submittedQuery.toLowerCase())
       )
   );
 
@@ -25,22 +30,25 @@ export default function IndexPenjahit() {
     <View style={GlobalStyles.container}>
       <Header />
 
-      <View>
-        <SearchInput
-          openSearchBar={openSearchBar}
-          setOpenSearchBar={setOpenSearchBar}
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-        />
-      </View>
+      <SearchInput
+        openSearchBar={openSearchBar}
+        setOpenSearchBar={setOpenSearchBar}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        onSubmitSearch={handleSubmitSearch}
+        placeholder="Cari penjahit..."
+        title="Penjahit"
+      />
 
       <FlatList
         data={filteredData}
+        keyExtractor={(item) => item.idPenjahit}
+        initialNumToRender={5}
         renderItem={({ item }: { item: DataItemPenjahit }) => (
           <Pressable
             onPress={() =>
               router.push({
-                pathname: "/(tabs)/penjahit/[id]",
+                pathname: "/(app)/(tabs)/penjahit/[id]",
                 params: { id: item.idPenjahit },
               })
             }
@@ -54,8 +62,6 @@ export default function IndexPenjahit() {
             />
           </Pressable>
         )}
-        keyExtractor={(item) => item.idPenjahit}
-        initialNumToRender={5}
         ListEmptyComponent={
           <Text style={{ textAlign: "center", marginTop: 20 }}>
             Tidak ada hasil yang ditemukan

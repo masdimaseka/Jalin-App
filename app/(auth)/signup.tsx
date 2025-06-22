@@ -1,12 +1,11 @@
-import { useRouter, Redirect } from "expo-router";
+import { useRouter } from "expo-router";
 import {
-  TouchableOpacity,
   Text,
   TextInput,
   View,
-  Dimensions,
   StyleSheet,
   ActivityIndicator,
+  Pressable,
 } from "react-native";
 import { useState, useContext } from "react";
 import { auth, db } from "@/config/firebase";
@@ -21,18 +20,14 @@ import { AuthContext } from "@/context/AuthContext";
 
 export default function Signup() {
   const router = useRouter();
-  const { user, loading } = useContext(AuthContext);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
-  const [noHp, setNoHp] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  if (loading) return null;
-
   const handleSignUp = async () => {
-    if (!email || !password || !username || !noHp) {
+    if (!email || !password || !username) {
       alert("Peringatan: Semua field harus diisi");
       return;
     }
@@ -52,14 +47,16 @@ export default function Signup() {
         uid: user.uid,
         email,
         username,
-        noHp,
         createdAt: new Date().toISOString(),
+        role: "user",
       });
 
       await sendEmailVerification(user);
 
-      alert("Akun berhasil dibuat! Silakan verifikasi melalui email.");
-      router.push("/(auth)/login");
+      alert(
+        "Akun berhasil dibuat! Silakan verifikasi melalui email & lengkapi profile."
+      );
+      router.push("/(auth)/create-profile");
     } catch (error: any) {
       console.error("Error registering:", error);
       alert("Gagal daftar: " + error.message);
@@ -75,6 +72,12 @@ export default function Signup() {
       <View style={styles.formContainer}>
         <TextInput
           style={styles.input}
+          placeholder="Username"
+          value={username}
+          onChangeText={setUsername}
+        />
+        <TextInput
+          style={styles.input}
           placeholder="Email"
           value={email}
           onChangeText={setEmail}
@@ -88,43 +91,28 @@ export default function Signup() {
           value={password}
           onChangeText={setPassword}
         />
-        <TextInput
-          style={styles.input}
-          placeholder="Username"
-          value={username}
-          onChangeText={setUsername}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Nomor HP"
-          value={noHp}
-          onChangeText={setNoHp}
-          keyboardType="phone-pad"
-        />
 
-        <TouchableOpacity style={styles.signupButton} onPress={handleSignUp}>
+        <Pressable style={styles.signupButton} onPress={handleSignUp}>
           {isSubmitting ? (
             <ActivityIndicator color="#fff" />
           ) : (
-            <Text style={styles.signupText}>Sign Up</Text>
+            <Text style={styles.signupText}>Daftar</Text>
           )}
-        </TouchableOpacity>
+        </Pressable>
 
         <Text style={styles.loginText}>
-          Already have an account?{" "}
+          Sudah punya akun?{" "}
           <Text
             style={styles.loginLink}
             onPress={() => router.push("/(auth)/login")}
           >
-            Login
+            Log In
           </Text>
         </Text>
       </View>
     </View>
   );
 }
-
-const { width, height } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   container: {
@@ -147,7 +135,7 @@ const styles = StyleSheet.create({
   input: {
     width: "100%",
     height: 50,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#fff",
     borderRadius: 10,
     paddingHorizontal: 15,
     fontSize: 16,
