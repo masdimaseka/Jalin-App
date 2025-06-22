@@ -1,54 +1,71 @@
-import CardPekerjaan from "@/components/CardPekerjaan";
+import {
+  View,
+  Text,
+  ScrollView,
+  Pressable,
+  ActivityIndicator,
+} from "react-native";
+import { AntDesign, Ionicons } from "@expo/vector-icons";
+import { useLocalSearchParams } from "expo-router";
+import { useEffect, useState } from "react";
+import { doc, getDoc } from "firebase/firestore";
+
 import CardPenjahit from "@/components/CardPenjahit";
 import GlobalStyles from "@/styles/GlobalStyles";
-import { DataItemPekerjaan, PEKERJAAN_DATA } from "@/data/DataPekerjaanDummy";
-import { PENJAHIT_DATA } from "@/data/DataPenjahitDummy";
-import { AntDesign, Ionicons } from "@expo/vector-icons";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import { useState } from "react";
-import { Pressable, ScrollView, Text, View } from "react-native";
 import ProfileStyles from "@/styles/ProfileStyles";
+import { db } from "@/config/firebase";
 
 export default function DetailPenjahit() {
   const { id } = useLocalSearchParams<{ id: string }>();
+  const [data, setData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
   const [showDesc, setShowDesc] = useState(false);
 
-  const router = useRouter();
+  useEffect(() => {
+    const fetchDetail = async () => {
+      if (!id) return;
+      try {
+        const docRef = doc(db, "users", id);
+        const docSnap = await getDoc(docRef);
 
-  const detailData = PENJAHIT_DATA.find((item) => item.idPenjahit === id);
-  const pekerjaanData = PEKERJAAN_DATA.filter(
-    (item) => item.dataPenjahit.idPenjahit === id
-  );
+        if (docSnap.exists()) {
+          setData(docSnap.data());
+        } else {
+          console.warn("Dokumen tidak ditemukan");
+        }
+      } catch (error) {
+        console.error("Gagal mengambil data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  if (!detailData) {
-    return (
-      <Text style={{ textAlign: "center", marginTop: 20 }}>
-        Data tidak ditemukan
-      </Text>
-    );
+    fetchDetail();
+  }, [id]);
+
+  const handleShowDesc = () => setShowDesc((prev) => !prev);
+
+  if (loading) {
+    return <ActivityIndicator style={{ marginTop: 40 }} size="large" />;
   }
 
-  if (!pekerjaanData) {
+  if (!data || !data.dataPenjahit) {
     return (
-      <Text style={{ textAlign: "center", marginTop: 20 }}>
-        Data tidak ditemukan
-      </Text>
+      <View style={GlobalStyles.container}>
+        <Text style={{ textAlign: "center", marginTop: 20 }}>
+          Data penjahit tidak ditemukan.
+        </Text>
+      </View>
     );
   }
-
-  const handleShowDesc = () => {
-    setShowDesc((prev) => !prev);
-  };
 
   return (
     <View style={GlobalStyles.container}>
       <ScrollView>
         <CardPenjahit
-          namaPenjahit={detailData.namaPenjahit}
-          lokasiPenjahit={detailData.lokasiPenjahit}
-          ratingPenjahit={detailData.ratingPenjahit}
-          tarifJahit={detailData.tarifJahit}
-          spesialisasiPenjahit={detailData.spesialisasiPenjahit}
+          nama={data.nama}
+          lokasi={data.lokasi}
+          dataPenjahit={data.dataPenjahit}
         />
 
         <View style={ProfileStyles.profileDescContainer}>
@@ -62,10 +79,12 @@ export default function DetailPenjahit() {
               <AntDesign name="right" size={12} color="black" />
             )}
           </Pressable>
+
           {showDesc && (
             <View style={{ marginTop: 12 }}>
               <Text style={{ textAlign: "justify" }}>
-                {detailData.deskripsiPenjahit}
+                {data.dataPenjahit.deskripsi ||
+                  "Deskripsi penjahit belum tersedia."}
               </Text>
             </View>
           )}

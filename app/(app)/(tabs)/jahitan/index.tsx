@@ -15,6 +15,7 @@ import { useRouter } from "expo-router";
 import CardPekerjaan from "@/components/CardPekerjaan";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "@/config/firebase";
+import { Colors } from "@/constant/theme";
 
 type DataItemPekerjaan = {
   id: string;
@@ -129,7 +130,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 24,
     right: 24,
-    backgroundColor: "#4A63E7",
+    backgroundColor: Colors.primary,
     borderRadius: 28,
     justifyContent: "center",
     alignItems: "center",

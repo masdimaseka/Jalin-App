@@ -1,24 +1,15 @@
 import { Colors } from "@/constant/theme";
 import CardStyles from "@/styles/CardStyles";
-import GlobalStyles from "@/styles/GlobalStyles";
-import { AntDesign, FontAwesome5, FontAwesome6 } from "@expo/vector-icons";
+import { FontAwesome5, FontAwesome6, MaterialIcons } from "@expo/vector-icons";
 import { View, Text, Image } from "react-native";
 
 type CardPenjahitProps = {
-  namaPenjahit: string;
-  lokasiPenjahit: string;
-  ratingPenjahit: number;
-  tarifJahit: string;
-  spesialisasiPenjahit: string[];
+  nama: string;
+  lokasi: string;
+  dataPenjahit: any;
 };
 
-const CardPenjahit = ({
-  namaPenjahit,
-  lokasiPenjahit,
-  ratingPenjahit,
-  tarifJahit,
-  spesialisasiPenjahit,
-}: CardPenjahitProps) => {
+const CardPenjahit = ({ nama, lokasi, dataPenjahit }: CardPenjahitProps) => {
   return (
     <View style={CardStyles.card}>
       <View>
@@ -31,20 +22,22 @@ const CardPenjahit = ({
         />
       </View>
       <View>
-        <Text style={CardStyles.cardTitle}>{namaPenjahit}</Text>
-        <View style={CardStyles.cardContentContainer}>
-          <View style={CardStyles.cardContent}>
-            <AntDesign name="star" size={12} color="orange" />
-            <Text>{ratingPenjahit}</Text>
-          </View>
-          <View style={CardStyles.cardContent}>
-            <FontAwesome5
-              name="money-bill-wave"
-              size={12}
-              style={{ color: Colors.primary }}
-            />
-            <Text>{tarifJahit}</Text>
-          </View>
+        <Text style={CardStyles.cardTitle}>{nama}</Text>
+        <View style={CardStyles.cardContent}>
+          <MaterialIcons
+            name="handyman"
+            size={12}
+            style={{ color: Colors.primary }}
+          />
+          <Text>{dataPenjahit.kemampuan}</Text>
+        </View>
+        <View style={CardStyles.cardContent}>
+          <FontAwesome5
+            name="money-bill-wave"
+            size={12}
+            style={{ color: Colors.primary }}
+          />
+          <Text>{dataPenjahit.rataRataBiaya}</Text>
         </View>
         <View style={CardStyles.cardContent}>
           <FontAwesome6
@@ -52,18 +45,7 @@ const CardPenjahit = ({
             size={12}
             style={{ color: Colors.primary }}
           />
-          <Text>{lokasiPenjahit}</Text>
-        </View>
-        <View style={CardStyles.cardContentContainer}>
-          {spesialisasiPenjahit.length > 0 ? (
-            spesialisasiPenjahit.map((specialty, index) => (
-              <View key={index} style={CardStyles.cardCategory}>
-                <Text style={{ fontSize: 12 }}>{specialty}</Text>
-              </View>
-            ))
-          ) : (
-            <Text>No specialties available</Text>
-          )}
+          <Text>{lokasi}</Text>
         </View>
       </View>
     </View>

@@ -97,6 +97,7 @@ export default function create() {
           noTelp: userData?.noTelp || "",
           lokasi: userData?.lokasi || "",
         },
+        dataPenjahit: {},
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       });

@@ -12,12 +12,12 @@ import { useRouter } from "expo-router";
 import { Colors } from "@/constant/theme";
 import { doc, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "@/config/firebase";
-import { AuthContext } from "@/context/AuthContext";
 import { useUserData } from "@/hooks/useUserData";
 
 export default function RegisterPenjahit() {
   const [deskripsi, setDeskripsi] = useState("");
   const [biaya, setBiaya] = useState("");
+  const [kemampuan, setKemampuan] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { userData, loadingUserData } = useUserData();
@@ -38,6 +38,7 @@ export default function RegisterPenjahit() {
         dataPenjahit: {
           deskripsi: deskripsi,
           rataRataBiaya: biaya,
+          kemampuan: kemampuan,
         },
       });
 
@@ -65,7 +66,7 @@ export default function RegisterPenjahit() {
         multiline
         numberOfLines={4}
         style={styles.multilineInput}
-        placeholder="Deskripsi Pekerjaan"
+        placeholder="Saya adalah penjahit..."
         value={deskripsi}
         onChangeText={setDeskripsi}
       />
@@ -73,9 +74,17 @@ export default function RegisterPenjahit() {
       <Text style={{ marginBottom: 8 }}>Rata-rata biaya jasa</Text>
       <TextInput
         style={styles.input}
-        placeholder="Rata-rata Biaya Jasa"
+        placeholder="xx.xxx - xxx.xxx"
         value={biaya}
         onChangeText={setBiaya}
+      />
+
+      <Text style={{ marginBottom: 8 }}>Kemampuan khusus</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="jas, baju, celana, dll"
+        value={kemampuan}
+        onChangeText={setKemampuan}
       />
 
       <Pressable

@@ -12,9 +12,8 @@ const TabLayout = () => {
         tabBarActiveTintColor: Colors.primary,
         tabBarInactiveTintColor: "lightgray",
         headerShown: false,
-        tabBarShowLabel: false,
         tabBarStyle: {
-          height: 64,
+          height: 80,
           paddingTop: 12,
           borderTopStartRadius: 24,
           borderTopEndRadius: 24,
@@ -49,7 +48,7 @@ const TabLayout = () => {
       />
 
       <Tabs.Screen
-        name="about"
+        name="dashboard"
         options={{
           tabBarIcon: ({ color, size }) => (
             <FontAwesome name="building" size={size} color={color} />
