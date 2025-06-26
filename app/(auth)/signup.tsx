@@ -3,11 +3,10 @@ import {
   Text,
   TextInput,
   View,
-  StyleSheet,
   ActivityIndicator,
   Pressable,
 } from "react-native";
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { auth, db } from "@/config/firebase";
 import {
   createUserWithEmailAndPassword,
@@ -15,16 +14,19 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
-import { Colors } from "@/constant/theme";
-import { AuthContext } from "@/context/AuthContext";
+import { containerStyles } from "@/styles/ContainerStyles";
+import { textStyles } from "@/styles/TextStyles";
+import { inputStyles } from "@/styles/InputStyles";
+import { buttonStyles } from "@/styles/ButtonStyles";
+import { colors } from "@/constant/theme";
 
 export default function Signup() {
-  const router = useRouter();
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const router = useRouter();
 
   const handleSignUp = async () => {
     if (!email || !password || !username) {
@@ -33,6 +35,7 @@ export default function Signup() {
     }
 
     setIsSubmitting(true);
+
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -47,8 +50,8 @@ export default function Signup() {
         uid: user.uid,
         email,
         username,
-        createdAt: new Date().toISOString(),
         role: "user",
+        createdAt: new Date().toISOString(),
       });
 
       await sendEmailVerification(user);
@@ -66,18 +69,17 @@ export default function Signup() {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Sign Up</Text>
-
-      <View style={styles.formContainer}>
+    <View style={containerStyles.container}>
+      <View style={containerStyles.formContainer}>
+        <Text style={textStyles.title}>Sign Up</Text>
         <TextInput
-          style={styles.input}
+          style={inputStyles.input}
           placeholder="Username"
           value={username}
           onChangeText={setUsername}
         />
         <TextInput
-          style={styles.input}
+          style={inputStyles.input}
           placeholder="Email"
           value={email}
           onChangeText={setEmail}
@@ -85,26 +87,29 @@ export default function Signup() {
           autoCapitalize="none"
         />
         <TextInput
-          style={styles.input}
+          style={inputStyles.input}
           placeholder="Password"
           secureTextEntry
           value={password}
           onChangeText={setPassword}
         />
 
-        <Pressable style={styles.signupButton} onPress={handleSignUp}>
+        <Pressable
+          style={[buttonStyles.btnPrimary, buttonStyles.btnFull]}
+          onPress={handleSignUp}
+        >
           {isSubmitting ? (
             <ActivityIndicator color="#fff" />
           ) : (
-            <Text style={styles.signupText}>Daftar</Text>
+            <Text style={buttonStyles.btnPrimaryText}>Daftar</Text>
           )}
         </Pressable>
 
-        <Text style={styles.loginText}>
+        <Text>
           Sudah punya akun?{" "}
           <Text
-            style={styles.loginLink}
             onPress={() => router.push("/(auth)/login")}
+            style={{ color: colors.primary, fontWeight: "bold" }}
           >
             Log In
           </Text>
@@ -113,60 +118,3 @@ export default function Signup() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: "bold",
-    color: "#000",
-    marginTop: 200,
-    marginBottom: 40,
-    textAlign: "center",
-  },
-  formContainer: {
-    flex: 1,
-    paddingHorizontal: 20,
-    alignItems: "center",
-  },
-  input: {
-    width: "100%",
-    height: 50,
-    backgroundColor: "#fff",
-    borderRadius: 10,
-    paddingHorizontal: 15,
-    fontSize: 16,
-    marginBottom: 15,
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 2,
-  },
-  signupButton: {
-    width: "100%",
-    height: 50,
-    backgroundColor: Colors.primary,
-    borderRadius: 10,
-    alignItems: "center",
-    justifyContent: "center",
-    marginVertical: 10,
-  },
-  signupText: {
-    color: "#fff",
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  loginText: {
-    fontSize: 14,
-    color: "#444",
-    marginTop: 10,
-    textAlign: "center",
-  },
-  loginLink: {
-    color: Colors.primary,
-    fontWeight: "bold",
-  },
-});

@@ -1,5 +1,5 @@
-import { Colors } from "@/constant/theme";
-import CardStyles from "@/styles/CardStyles";
+import { colors } from "@/constant/theme";
+import cardStyles from "@/styles/CardStyles";
 import { FontAwesome5, FontAwesome6, MaterialIcons } from "@expo/vector-icons";
 import { View, Text, Image } from "react-native";
 
@@ -11,7 +11,7 @@ type CardPenjahitProps = {
 
 const CardPenjahit = ({ nama, lokasi, dataPenjahit }: CardPenjahitProps) => {
   return (
-    <View style={CardStyles.card}>
+    <View style={cardStyles.card}>
       <View>
         <Image
           source={require("@/assets/images/avatar.png")}
@@ -22,28 +22,28 @@ const CardPenjahit = ({ nama, lokasi, dataPenjahit }: CardPenjahitProps) => {
         />
       </View>
       <View>
-        <Text style={CardStyles.cardTitle}>{nama}</Text>
-        <View style={CardStyles.cardContent}>
+        <Text style={cardStyles.cardTitle}>{nama}</Text>
+        <View style={cardStyles.cardContent}>
           <MaterialIcons
             name="handyman"
             size={12}
-            style={{ color: Colors.primary }}
+            style={{ color: colors.primary }}
           />
           <Text>{dataPenjahit.kemampuan}</Text>
         </View>
-        <View style={CardStyles.cardContent}>
+        <View style={cardStyles.cardContent}>
           <FontAwesome5
             name="money-bill-wave"
             size={12}
-            style={{ color: Colors.primary }}
+            style={{ color: colors.primary }}
           />
           <Text>{dataPenjahit.rataRataBiaya}</Text>
         </View>
-        <View style={CardStyles.cardContent}>
+        <View style={cardStyles.cardContent}>
           <FontAwesome6
             name="location-dot"
             size={12}
-            style={{ color: Colors.primary }}
+            style={{ color: colors.primary }}
           />
           <Text>{lokasi}</Text>
         </View>

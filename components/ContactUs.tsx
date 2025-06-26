@@ -1,4 +1,4 @@
-import { Colors } from "@/constant/theme";
+import { colors } from "@/constant/theme";
 import React, { useState } from "react";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 
@@ -39,7 +39,7 @@ const ContactUs = () => {
         onPress={handleSubmit}
         style={{
           marginTop: 10,
-          backgroundColor: Colors.primary,
+          backgroundColor: colors.primary,
           padding: 10,
           borderRadius: 5,
         }}

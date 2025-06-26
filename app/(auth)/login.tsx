@@ -1,28 +1,31 @@
-import { Colors } from "@/constant/theme";
 import { useRouter, Redirect } from "expo-router";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { auth } from "@/config/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import {
   View,
   Text,
   TextInput,
-  Dimensions,
-  StyleSheet,
   ActivityIndicator,
   Pressable,
+  Image,
 } from "react-native";
 import { AuthContext } from "@/context/AuthContext";
+import { containerStyles } from "@/styles/ContainerStyles";
+import { textStyles } from "@/styles/TextStyles";
+import { inputStyles } from "@/styles/InputStyles";
+import { buttonStyles } from "@/styles/ButtonStyles";
+import { colors } from "@/constant/theme";
+import Loading from "@/components/Loading";
 
 export default function Login() {
-  const router = useRouter();
-  const { user, loading } = useContext(AuthContext);
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loginLoading, setLoginLoading] = useState(false);
 
-  if (loading) return null;
+  const { user, loading } = useContext(AuthContext);
+
+  const router = useRouter();
 
   if (user?.emailVerified) {
     return <Redirect href="/(app)/(tabs)" />;
@@ -35,6 +38,7 @@ export default function Login() {
     }
 
     setLoginLoading(true);
+
     try {
       const userCredential = await signInWithEmailAndPassword(
         auth,
@@ -62,12 +66,11 @@ export default function Login() {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Log In</Text>
-
-      <View style={styles.formContainer}>
+    <View style={containerStyles.container}>
+      <View style={containerStyles.formContainer}>
+        <Text style={[textStyles.title]}>Log In</Text>
         <TextInput
-          style={styles.input}
+          style={inputStyles.input}
           placeholder="Email"
           value={email}
           onChangeText={setEmail}
@@ -75,24 +78,27 @@ export default function Login() {
           autoCapitalize="none"
         />
         <TextInput
-          style={styles.input}
+          style={inputStyles.input}
           placeholder="Password"
           secureTextEntry
           value={password}
           onChangeText={setPassword}
         />
 
-        <Pressable style={styles.loginButton} onPress={handleLogin}>
-          <Text style={styles.loginText}>
+        <Pressable
+          style={[buttonStyles.btnPrimary, buttonStyles.btnFull]}
+          onPress={handleLogin}
+        >
+          <Text style={buttonStyles.btnPrimaryText}>
             {loginLoading ? <ActivityIndicator color="#fff" /> : "Masuk"}
           </Text>
         </Pressable>
 
-        <Text style={styles.signupText}>
+        <Text>
           Belum punya akun?{" "}
           <Text
-            style={styles.signupLink}
             onPress={() => router.push("/(auth)/signup")}
+            style={{ color: colors.primary, fontWeight: "bold" }}
           >
             Sign Up
           </Text>
@@ -101,64 +107,3 @@ export default function Login() {
     </View>
   );
 }
-
-const { width, height } = Dimensions.get("window");
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: "bold",
-    color: "#000",
-    marginTop: 200,
-    marginBottom: 40,
-    textAlign: "center",
-  },
-  formContainer: {
-    flex: 1,
-    backgroundColor: "#fff",
-    paddingHorizontal: 20,
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    alignItems: "center",
-  },
-  input: {
-    width: "100%",
-    height: 50,
-    backgroundColor: "#f5f5f5",
-    borderRadius: 10,
-    paddingHorizontal: 15,
-    fontSize: 16,
-    marginBottom: 15,
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 2,
-  },
-  loginButton: {
-    width: "100%",
-    height: 50,
-    backgroundColor: Colors.primary,
-    borderRadius: 10,
-    alignItems: "center",
-    justifyContent: "center",
-    marginVertical: 10,
-  },
-  loginText: {
-    color: "#fff",
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  signupText: {
-    fontSize: 14,
-    color: "#444",
-    marginTop: 10,
-  },
-  signupLink: {
-    color: Colors.primary,
-    fontWeight: "bold",
-  },
-});

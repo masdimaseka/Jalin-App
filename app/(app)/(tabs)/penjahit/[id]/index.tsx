@@ -5,21 +5,25 @@ import {
   Pressable,
   ActivityIndicator,
 } from "react-native";
-import { AntDesign, Ionicons } from "@expo/vector-icons";
-import { useLocalSearchParams } from "expo-router";
+import { AntDesign, Fontisto, Ionicons } from "@expo/vector-icons";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { doc, getDoc } from "firebase/firestore";
 
 import CardPenjahit from "@/components/CardPenjahit";
-import GlobalStyles from "@/styles/GlobalStyles";
-import ProfileStyles from "@/styles/ProfileStyles";
+import profileStyles from "@/styles/ProfileStyles";
 import { db } from "@/config/firebase";
+import { containerStyles } from "@/styles/ContainerStyles";
+import { buttonStyles } from "@/styles/ButtonStyles";
+import { colors } from "@/constant/theme";
 
 export default function DetailPenjahit() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [showDesc, setShowDesc] = useState(false);
+
+  const router = useRouter();
 
   useEffect(() => {
     const fetchDetail = async () => {
@@ -46,12 +50,16 @@ export default function DetailPenjahit() {
   const handleShowDesc = () => setShowDesc((prev) => !prev);
 
   if (loading) {
-    return <ActivityIndicator style={{ marginTop: 40 }} size="large" />;
+    return (
+      <View style={containerStyles.container}>
+        <ActivityIndicator size="large" color={colors.primary} />
+      </View>
+    );
   }
 
   if (!data || !data.dataPenjahit) {
     return (
-      <View style={GlobalStyles.container}>
+      <View style={containerStyles.container}>
         <Text style={{ textAlign: "center", marginTop: 20 }}>
           Data penjahit tidak ditemukan.
         </Text>
@@ -60,7 +68,7 @@ export default function DetailPenjahit() {
   }
 
   return (
-    <View style={GlobalStyles.container}>
+    <View style={containerStyles.container}>
       <ScrollView>
         <CardPenjahit
           nama={data.nama}
@@ -68,9 +76,9 @@ export default function DetailPenjahit() {
           dataPenjahit={data.dataPenjahit}
         />
 
-        <View style={ProfileStyles.profileDescContainer}>
-          <Pressable onPress={handleShowDesc} style={ProfileStyles.profileDesc}>
-            <Text style={ProfileStyles.profileDescText}>
+        <View style={profileStyles.profileDescContainer}>
+          <Pressable onPress={handleShowDesc} style={profileStyles.profileDesc}>
+            <Text style={profileStyles.profileDescText}>
               Lihat Deskripsi Penjahit
             </Text>
             {showDesc ? (
@@ -90,9 +98,25 @@ export default function DetailPenjahit() {
           )}
         </View>
 
-        <Pressable style={[GlobalStyles.btnPrimary, { marginVertical: 24 }]}>
+        <Pressable
+          style={[
+            buttonStyles.btnSecondary,
+            { marginTop: 12, marginBottom: 12 },
+          ]}
+          onPress={() =>
+            router.push({
+              pathname: "/(app)/(tabs)/penjahit/[id]/riwayat",
+              params: { id: data.uid },
+            })
+          }
+        >
+          <Fontisto name="history" size={16} color={colors.primary} />
+          <Text style={buttonStyles.btnSecondaryText}>Riwayat Pekerjaan</Text>
+        </Pressable>
+
+        <Pressable style={[buttonStyles.btnPrimary]}>
           <Ionicons name="chatbubble-ellipses" size={16} color="white" />
-          <Text style={GlobalStyles.btnPrimaryText}>Hubungi Penjahit</Text>
+          <Text style={buttonStyles.btnPrimaryText}>Hubungi Penjahit</Text>
         </Pressable>
       </ScrollView>
     </View>

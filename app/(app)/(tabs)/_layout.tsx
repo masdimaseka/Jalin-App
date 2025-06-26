@@ -1,4 +1,4 @@
-import { Colors } from "@/constant/theme";
+import { colors } from "@/constant/theme";
 import { Tabs } from "expo-router";
 import Fontisto from "@expo/vector-icons/Fontisto";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
@@ -9,7 +9,7 @@ const TabLayout = () => {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors.primary,
+        tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: "lightgray",
         headerShown: false,
         tabBarStyle: {
@@ -23,6 +23,7 @@ const TabLayout = () => {
       <Tabs.Screen
         name="index"
         options={{
+          tabBarLabel: "Home",
           tabBarIcon: ({ color, size }) => (
             <Fontisto size={size} name="home" color={color} />
           ),

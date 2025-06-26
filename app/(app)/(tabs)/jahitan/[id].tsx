@@ -10,11 +10,13 @@ import React, { useEffect, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "@/config/firebase";
-import GlobalStyles from "@/styles/GlobalStyles";
-import CardStyles from "@/styles/CardStyles";
+import cardStyles from "@/styles/CardStyles";
 import useFormattedDeadline from "@/hooks/useFormatedDeadline";
-import { Colors } from "@/constant/theme";
+import { colors } from "@/constant/theme";
 import { useUserData } from "@/hooks/useUserData";
+import { containerStyles } from "@/styles/ContainerStyles";
+import { textStyles } from "@/styles/TextStyles";
+import { buttonStyles } from "@/styles/ButtonStyles";
 
 export default function DetailPekerjaan() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -81,10 +83,8 @@ export default function DetailPekerjaan() {
   if (loading) return <ActivityIndicator style={{ marginTop: 40 }} />;
 
   return (
-    <View style={GlobalStyles.container}>
-      <Text style={[GlobalStyles.title]}>
-        {data?.judul ?? "Tidak ada judul"}
-      </Text>
+    <View style={containerStyles.container}>
+      <Text style={[textStyles.title]}>{data?.judul ?? "Tidak ada judul"}</Text>
 
       <View
         style={{
@@ -102,56 +102,39 @@ export default function DetailPekerjaan() {
         <Text>{data?.dataUser?.nama}</Text>
       </View>
 
-      <View style={[CardStyles.card2, { gap: 8 }]}>
-        <Text style={[GlobalStyles.subTitle]}>Deskripsi pekerjaan</Text>
+      <View style={[cardStyles.card2, { gap: 8 }]}>
+        <Text style={[textStyles.subTitle]}>Deskripsi pekerjaan</Text>
         <Text>{data?.deskripsi}</Text>
       </View>
 
-      <View style={CardStyles.card2}>
+      <View style={cardStyles.card2}>
         <Text>
-          <Text style={[GlobalStyles.subTitle]}>Status : </Text>
+          <Text style={[textStyles.subTitle]}>Status : </Text>
           {data?.status}
         </Text>
       </View>
 
-      <View style={CardStyles.card2}>
+      <View style={cardStyles.card2}>
         <Text>
-          <Text style={[GlobalStyles.subTitle]}>Deadline : </Text>
+          <Text style={[textStyles.subTitle]}>Deadline : </Text>
           {formatedDeadline}
         </Text>
       </View>
 
-      <View style={[CardStyles.card2, { gap: 8 }]}>
-        <Text style={[GlobalStyles.subTitle]}>Alamat</Text>
+      <View style={[cardStyles.card2, { gap: 8 }]}>
+        <Text style={[textStyles.subTitle]}>Alamat</Text>
         <Text>{data?.alamat}</Text>
       </View>
 
       {userData?.role === "penjahit" && data?.status === "pending" && (
-        <Pressable style={styles.submitButton} onPress={handleSubmit}>
+        <Pressable style={buttonStyles.btnPrimary} onPress={handleSubmit}>
           {isSubmitting ? (
             <ActivityIndicator color="#fff" />
           ) : (
-            <Text style={styles.submitText}>Ambil pekerjaan</Text>
+            <Text style={buttonStyles.btnPrimaryText}>Ambil pekerjaan</Text>
           )}
         </Pressable>
       )}
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  submitButton: {
-    width: "100%",
-    height: 50,
-    backgroundColor: Colors.primary,
-    borderRadius: 10,
-    alignItems: "center",
-    justifyContent: "center",
-    marginVertical: 10,
-  },
-  submitText: {
-    color: "#fff",
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-});

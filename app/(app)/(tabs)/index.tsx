@@ -1,6 +1,5 @@
 import Header from "@/components/Header";
-import { Colors } from "@/constant/theme";
-import GlobalStyles from "@/styles/GlobalStyles";
+import { colors } from "@/constant/theme";
 import { FontAwesome6, MaterialIcons } from "@expo/vector-icons";
 import { useUserData } from "@/hooks/useUserData";
 import {
@@ -11,24 +10,37 @@ import {
   ImageBackground,
   Pressable,
   ActivityIndicator,
+  Image,
 } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { containerStyles } from "@/styles/ContainerStyles";
+import { textStyles } from "@/styles/TextStyles";
+import { useRouter } from "expo-router";
 
 export default function Index() {
   const { userData, loadingUserData } = useUserData();
 
+  const router = useRouter();
+
   if (loadingUserData)
-    return <ActivityIndicator style={{ marginTop: 40 }} size="large" />;
+    return (
+      <SafeAreaProvider>
+        <SafeAreaView style={containerStyles.container} edges={["top"]}>
+          <Header />
+          <ActivityIndicator size="large" color={colors.primary} />
+        </SafeAreaView>
+      </SafeAreaProvider>
+    );
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView style={GlobalStyles.container} edges={["top"]}>
+      <SafeAreaView style={containerStyles.container} edges={["top"]}>
         <Header />
         <ScrollView
           contentContainerStyle={{ padding: 20 }}
           showsVerticalScrollIndicator={false}
         >
-          <Text style={[GlobalStyles.subTitle, { marginBottom: 20 }]}>
+          <Text style={[textStyles.title2, { marginBottom: 20 }]}>
             Hi, {userData?.nama}
           </Text>
 
@@ -46,40 +58,70 @@ export default function Index() {
             </View>
           </ImageBackground>
 
-          <View style={styles.buttonRow}>
-            <Pressable style={styles.mainButton}>
+          <View style={styles.menuContainer}>
+            <Pressable
+              style={styles.menuBtn}
+              onPress={() => {
+                userData?.role === "penjahit"
+                  ? router.push("/(app)/profile")
+                  : router.push("/(app)/register-penjahit");
+              }}
+            >
               <FontAwesome6
                 name="people-group"
                 size={40}
                 color="white"
                 style={{ marginBottom: 10 }}
               />
-              <Text style={styles.buttonText}>Bergabung Sebagai Penjahit</Text>
+              <Text style={styles.menuBtnText}>Bergabung Sebagai Penjahit</Text>
             </Pressable>
 
-            <Pressable style={styles.mainButton}>
+            <Pressable
+              style={styles.menuBtn}
+              onPress={() => router.push("/(app)/(tabs)/jahitan")}
+            >
               <MaterialIcons
                 name="explore"
                 size={40}
                 color="white"
                 style={{ marginBottom: 10 }}
               />
-              <Text style={styles.buttonText}>Eksplorasi Temukan Jahitan</Text>
+              <Text style={styles.menuBtnText}>Eksplorasi Temukan Jahitan</Text>
             </Pressable>
           </View>
 
-          <Text style={styles.sectionTitle}>Kenapa Memilih Jalin</Text>
+          <Text style={textStyles.title2}>Kenapa Memilih Jalin</Text>
           <View style={styles.featureContainer}>
-            {[
-              "Kemudahan dan Efisiensi",
-              "Inovasi dan Adaptasi",
-              "Meningkatkan Pendapatan",
-              "Inklusivitas dan Skalabilitas",
-            ].map((title, index) => (
-              <View key={index} style={styles.featureCard}>
-                <Text style={styles.featureTitle}>{title}</Text>
-              </View>
-            ))}
+            <View style={styles.featureCard}>
+              <Image
+                source={require(`@/assets/images/illus1.png`)}
+                style={{ width: 50, height: 40 }}
+              />
+              <Text style={styles.featureTitle}>Kemudahan dan Efisiensi</Text>
+            </View>
+            <View style={styles.featureCard}>
+              <Image
+                source={require(`@/assets/images/illus2.png`)}
+                style={{ width: 50, height: 40 }}
+              />
+              <Text style={styles.featureTitle}>Inovasi dan Adaptasi</Text>
+            </View>
+            <View style={styles.featureCard}>
+              <Image
+                source={require(`@/assets/images/illus3.png`)}
+                style={{ width: 50, height: 40 }}
+              />
+              <Text style={styles.featureTitle}>
+                Inklusivitas dan Skalabilitas
+              </Text>
+            </View>
+            <View style={styles.featureCard}>
+              <Image
+                source={require(`@/assets/images/illus4.png`)}
+                style={{ width: 50, height: 40 }}
+              />
+              <Text style={styles.featureTitle}>Kemudahan dan Efisiensi</Text>
+            </View>
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -105,25 +147,20 @@ const styles = StyleSheet.create({
     fontSize: 12,
     textAlign: "center",
   },
-  buttonRow: {
+  menuContainer: {
     marginVertical: 28,
     flexDirection: "row",
     justifyContent: "space-between",
   },
-  mainButton: {
-    backgroundColor: Colors.primary,
+  menuBtn: {
+    backgroundColor: colors.primary,
     borderRadius: 16,
     width: "48%",
     padding: 16,
   },
-  buttonText: {
+  menuBtnText: {
     color: "white",
     fontWeight: "bold",
-  },
-  sectionTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-    marginBottom: 12,
   },
   featureContainer: {
     marginBottom: 40,
@@ -133,10 +170,13 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 16,
     marginBottom: 16,
+    flexDirection: "row",
+    gap: 12,
+    alignItems: "center",
   },
   featureTitle: {
     fontSize: 16,
     fontWeight: "bold",
-    color: Colors.primary,
+    color: colors.primary,
   },
 });

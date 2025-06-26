@@ -1,6 +1,5 @@
-import { Colors } from "@/constant/theme";
-import CardStyles from "@/styles/CardStyles";
-import GlobalStyles from "@/styles/GlobalStyles";
+import { colors } from "@/constant/theme";
+import cardStyles from "@/styles/CardStyles";
 import { FontAwesome, FontAwesome6, MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
@@ -8,6 +7,9 @@ import { ActivityIndicator, Image, Pressable, Text, View } from "react-native";
 import { auth, db } from "@/config/firebase";
 import { doc, getDoc } from "firebase/firestore";
 import { onAuthStateChanged, signOut } from "firebase/auth";
+import { containerStyles } from "@/styles/ContainerStyles";
+import { buttonStyles } from "@/styles/ButtonStyles";
+import { textStyles } from "@/styles/TextStyles";
 
 const Profile = () => {
   const router = useRouter();
@@ -49,8 +51,8 @@ const Profile = () => {
   if (loading) return <ActivityIndicator style={{ flex: 1 }} size="large" />;
 
   return (
-    <View style={GlobalStyles.container}>
-      <View style={CardStyles.card}>
+    <View style={containerStyles.container}>
+      <View style={cardStyles.card}>
         <View>
           <Image
             source={require("@/assets/images/avatar.png")}
@@ -58,31 +60,31 @@ const Profile = () => {
           />
         </View>
         <View>
-          <Text style={CardStyles.cardTitle}>
+          <Text style={cardStyles.cardTitle}>
             {userData?.nama || "Nama Pengguna"}
           </Text>
-          <View style={CardStyles.cardContentContainer}>
-            <View style={CardStyles.cardContent}>
+          <View style={cardStyles.cardContentContainer}>
+            <View style={cardStyles.cardContent}>
               <FontAwesome
                 name="phone"
                 size={16}
-                style={{ color: Colors.primary }}
+                style={{ color: colors.primary }}
               />
               <Text>{userData?.noTelp || "-"}</Text>
             </View>
-            <View style={CardStyles.cardContent}>
+            <View style={cardStyles.cardContent}>
               <MaterialIcons
                 name="email"
                 size={16}
-                style={{ color: Colors.primary }}
+                style={{ color: colors.primary }}
               />
               <Text>{userData?.email || "-"}</Text>
             </View>
-            <View style={CardStyles.cardContent}>
+            <View style={cardStyles.cardContent}>
               <FontAwesome6
                 name="map-location-dot"
                 size={16}
-                style={{ color: Colors.primary }}
+                style={{ color: colors.primary }}
               />
               <Text>{userData?.lokasi || "-"}</Text>
             </View>
@@ -92,26 +94,26 @@ const Profile = () => {
 
       <Pressable
         style={[
-          GlobalStyles.btnPrimary,
+          buttonStyles.btnPrimary,
           { marginTop: 2, backgroundColor: "red" },
         ]}
         onPress={handleLogout}
       >
-        <Text style={GlobalStyles.btnPrimaryText}>Log Out</Text>
+        <Text style={buttonStyles.btnPrimaryText}>Log Out</Text>
       </Pressable>
 
       {userData?.role !== "penjahit" ? (
-        <View style={[CardStyles.card2, { marginTop: 20 }]}>
-          <Text style={GlobalStyles.subTitle}>Ingin menjadi penjahit?</Text>
+        <View style={[cardStyles.card2, { marginTop: 20 }]}>
+          <Text style={textStyles.subTitle}>Ingin menjadi penjahit?</Text>
           <Pressable
-            style={[GlobalStyles.btnPrimary]}
+            style={[buttonStyles.btnPrimary]}
             onPress={() => router.push("/(app)/register-penjahit")}
           >
-            <Text style={GlobalStyles.btnPrimaryText}>Daftar Sekarang</Text>
+            <Text style={buttonStyles.btnPrimaryText}>Daftar Sekarang</Text>
           </Pressable>
         </View>
       ) : (
-        <View style={[CardStyles.card2, { marginTop: 20 }]}>
+        <View style={[cardStyles.card2, { marginTop: 20 }]}>
           <View
             style={{
               paddingBottom: 16,
@@ -120,16 +122,16 @@ const Profile = () => {
               borderColor: "lightgray",
             }}
           >
-            <Text style={[CardStyles.cardTitle]}>Informasi Penjahit</Text>
+            <Text style={[cardStyles.cardTitle]}>Informasi Penjahit</Text>
           </View>
           <View>
-            <Text style={[GlobalStyles.subTitle, { marginBottom: 8 }]}>
+            <Text style={[textStyles.subTitle, { marginBottom: 8 }]}>
               Deskripsi penjahit
             </Text>
             <Text>{userData?.dataPenjahit?.deskripsi}</Text>
           </View>
           <View>
-            <Text style={[GlobalStyles.subTitle, { marginBottom: 8 }]}>
+            <Text style={[textStyles.subTitle, { marginBottom: 8 }]}>
               Rata-rata biaya jasa
             </Text>
             <Text>{userData?.dataPenjahit?.rataRataBiaya}</Text>

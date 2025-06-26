@@ -7,16 +7,18 @@ import {
   ActivityIndicator,
   Platform,
 } from "react-native";
-import React, { useContext, useEffect, useState } from "react";
-import GlobalStyles from "@/styles/GlobalStyles";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
-import { Colors } from "@/constant/theme";
+import { colors } from "@/constant/theme";
 import * as Location from "expo-location";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { doc, setDoc } from "firebase/firestore";
 import { db } from "@/config/firebase";
-import { AuthContext } from "@/context/AuthContext";
 import { useUserData } from "@/hooks/useUserData";
+import { containerStyles } from "@/styles/ContainerStyles";
+import { buttonStyles } from "@/styles/ButtonStyles";
+import { inputStyles } from "@/styles/InputStyles";
+import { textStyles } from "@/styles/TextStyles";
 
 export default function create() {
   const [judul, setJudul] = useState("");
@@ -116,14 +118,14 @@ export default function create() {
     return <ActivityIndicator style={{ marginTop: 40 }} size="large" />;
 
   return (
-    <View style={GlobalStyles.container}>
-      <Text style={[GlobalStyles.subTitle, { marginBottom: 20 }]}>
+    <View style={containerStyles.container}>
+      <Text style={[textStyles.subTitle, { marginBottom: 20 }]}>
         Lengkapi form berikut
       </Text>
 
       <Text style={{ marginBottom: 8 }}>Judul pekerjaan</Text>
       <TextInput
-        style={styles.input}
+        style={inputStyles.input}
         placeholder="Judul Pekerjaan"
         value={judul}
         onChangeText={setJudul}
@@ -133,15 +135,24 @@ export default function create() {
       <TextInput
         multiline
         numberOfLines={4}
-        style={styles.multilineInput}
+        style={inputStyles.multilineInput}
         placeholder="Deskripsi Pekerjaan"
         value={deskripsi}
         onChangeText={setDeskripsi}
       />
 
       <Text style={{ marginBottom: 8 }}>Tenggat Pengerjaan</Text>
-      <Pressable onPress={() => setShowDatePicker(true)} style={styles.input}>
-        <Text style={{ color: tenggat ? "#000" : "#aaa", fontSize: 16 }}>
+      <Pressable
+        onPress={() => setShowDatePicker(true)}
+        style={inputStyles.input}
+      >
+        <Text
+          style={{
+            color: tenggat ? "#000" : "#aaa",
+            fontSize: 16,
+            marginTop: 12,
+          }}
+        >
           {tenggat ? tenggat : "Pilih tanggal"}
         </Text>
       </Pressable>
@@ -156,8 +167,13 @@ export default function create() {
       )}
 
       <Text style={{ marginBottom: 8 }}>Waktu Pengerjaan</Text>
-      <Pressable onPress={() => setShowTimePicker(true)} style={styles.input}>
-        <Text style={{ color: jam ? "#000" : "#aaa", fontSize: 16 }}>
+      <Pressable
+        onPress={() => setShowTimePicker(true)}
+        style={inputStyles.input}
+      >
+        <Text
+          style={{ color: jam ? "#000" : "#aaa", fontSize: 16, marginTop: 12 }}
+        >
           {jam ? jam : "Pilih waktu"}
         </Text>
       </Pressable>
@@ -172,61 +188,19 @@ export default function create() {
 
       <Text style={{ marginBottom: 8 }}>Alamat pengambilan jahitan</Text>
       <TextInput
-        style={styles.input}
+        style={inputStyles.input}
         placeholder="Alamat"
         value={alamat}
         onChangeText={setAlamat}
       />
 
-      <Pressable style={styles.submitButton} onPress={handleSubmit}>
+      <Pressable style={buttonStyles.btnPrimary} onPress={handleSubmit}>
         {isSubmitting ? (
           <ActivityIndicator color="#fff" />
         ) : (
-          <Text style={styles.submitText}>Kirim</Text>
+          <Text style={buttonStyles.btnPrimaryText}>Kirim</Text>
         )}
       </Pressable>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
-  input: {
-    width: "100%",
-    height: 50,
-    backgroundColor: "#fff",
-    borderRadius: 10,
-    paddingHorizontal: 15,
-    fontSize: 16,
-    marginBottom: 15,
-    justifyContent: "center",
-  },
-  multilineInput: {
-    width: "100%",
-    height: 100,
-    backgroundColor: "#fff",
-    borderRadius: 10,
-    paddingHorizontal: 15,
-    fontSize: 16,
-    marginBottom: 15,
-    textAlignVertical: "top",
-    paddingTop: 10,
-  },
-  submitButton: {
-    width: "100%",
-    height: 50,
-    backgroundColor: Colors.primary,
-    borderRadius: 10,
-    alignItems: "center",
-    justifyContent: "center",
-    marginVertical: 10,
-  },
-  submitText: {
-    color: "#fff",
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-});

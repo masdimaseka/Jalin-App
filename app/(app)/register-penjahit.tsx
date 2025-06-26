@@ -6,13 +6,16 @@ import {
   Pressable,
   ActivityIndicator,
 } from "react-native";
-import React, { useContext, useEffect, useState } from "react";
-import GlobalStyles from "@/styles/GlobalStyles";
+import React, { useState } from "react";
 import { useRouter } from "expo-router";
-import { Colors } from "@/constant/theme";
+import { colors } from "@/constant/theme";
 import { doc, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "@/config/firebase";
 import { useUserData } from "@/hooks/useUserData";
+import { containerStyles } from "@/styles/ContainerStyles";
+import { textStyles } from "@/styles/TextStyles";
+import { inputStyles } from "@/styles/InputStyles";
+import { buttonStyles } from "@/styles/ButtonStyles";
 
 export default function RegisterPenjahit() {
   const [deskripsi, setDeskripsi] = useState("");
@@ -56,8 +59,8 @@ export default function RegisterPenjahit() {
     return <ActivityIndicator style={{ marginTop: 40 }} size="large" />;
 
   return (
-    <View style={GlobalStyles.container}>
-      <Text style={[GlobalStyles.subTitle, { marginBottom: 20 }]}>
+    <View style={containerStyles.container}>
+      <Text style={[textStyles.subTitle, { marginBottom: 20 }]}>
         Lengkapi form berikut
       </Text>
 
@@ -65,7 +68,7 @@ export default function RegisterPenjahit() {
       <TextInput
         multiline
         numberOfLines={4}
-        style={styles.multilineInput}
+        style={inputStyles.multilineInput}
         placeholder="Saya adalah penjahit..."
         value={deskripsi}
         onChangeText={setDeskripsi}
@@ -73,7 +76,7 @@ export default function RegisterPenjahit() {
 
       <Text style={{ marginBottom: 8 }}>Rata-rata biaya jasa</Text>
       <TextInput
-        style={styles.input}
+        style={inputStyles.input}
         placeholder="xx.xxx - xxx.xxx"
         value={biaya}
         onChangeText={setBiaya}
@@ -81,64 +84,22 @@ export default function RegisterPenjahit() {
 
       <Text style={{ marginBottom: 8 }}>Kemampuan khusus</Text>
       <TextInput
-        style={styles.input}
+        style={inputStyles.input}
         placeholder="jas, baju, celana, dll"
         value={kemampuan}
         onChangeText={setKemampuan}
       />
 
       <Pressable
-        style={[styles.submitButton, { marginTop: 20 }]}
+        style={[buttonStyles.btnPrimary, { marginTop: 20 }]}
         onPress={handleSubmit}
       >
         {isSubmitting ? (
           <ActivityIndicator color="#fff" />
         ) : (
-          <Text style={styles.submitText}>Daftar</Text>
+          <Text style={buttonStyles.btnPrimaryText}>Daftar</Text>
         )}
       </Pressable>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
-  input: {
-    width: "100%",
-    height: 50,
-    backgroundColor: "#fff",
-    borderRadius: 10,
-    paddingHorizontal: 15,
-    fontSize: 16,
-    marginBottom: 15,
-    justifyContent: "center",
-  },
-  multilineInput: {
-    width: "100%",
-    height: 100,
-    backgroundColor: "#fff",
-    borderRadius: 10,
-    paddingHorizontal: 15,
-    fontSize: 16,
-    marginBottom: 15,
-    textAlignVertical: "top",
-    paddingTop: 10,
-  },
-  submitButton: {
-    width: "100%",
-    height: 50,
-    backgroundColor: Colors.primary,
-    borderRadius: 10,
-    alignItems: "center",
-    justifyContent: "center",
-    marginVertical: 10,
-  },
-  submitText: {
-    color: "#fff",
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-});

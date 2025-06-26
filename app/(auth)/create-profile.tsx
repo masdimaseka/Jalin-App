@@ -3,16 +3,18 @@ import {
   Text,
   TextInput,
   View,
-  StyleSheet,
   ActivityIndicator,
   Pressable,
 } from "react-native";
 import { useState, useContext, useEffect } from "react";
 import { db } from "@/config/firebase";
 import { doc, updateDoc } from "firebase/firestore";
-import { Colors } from "@/constant/theme";
 import { AuthContext } from "@/context/AuthContext";
 import * as Location from "expo-location";
+import { containerStyles } from "@/styles/ContainerStyles";
+import { textStyles } from "@/styles/TextStyles";
+import { inputStyles } from "@/styles/InputStyles";
+import { buttonStyles } from "@/styles/ButtonStyles";
 
 export default function CreateProfile() {
   const router = useRouter();
@@ -67,7 +69,7 @@ export default function CreateProfile() {
         createdAt: new Date().toISOString(),
       });
 
-      alert("Akun berhasil dibuat!");
+      alert("Akun berhasil dibuat! & pastikan sudah verifikasi email.");
       router.push("/(auth)/login");
     } catch (error: any) {
       console.error("Error registering:", error);
@@ -80,100 +82,40 @@ export default function CreateProfile() {
   if (loading) return null;
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Create Profile</Text>
-
-      <View style={styles.formContainer}>
+    <View style={containerStyles.container}>
+      <View style={containerStyles.formContainer}>
+        <Text style={textStyles.title}>Create Profile</Text>
         <TextInput
-          style={styles.input}
+          style={inputStyles.input}
           placeholder="Nama"
           value={nama}
           onChangeText={setNama}
         />
         <TextInput
-          style={styles.input}
+          style={inputStyles.input}
           placeholder="No Telepon"
           value={noTelp}
           onChangeText={setNoTelp}
           keyboardType="phone-pad"
         />
         <TextInput
-          style={styles.input}
+          style={inputStyles.input}
           placeholder="Alamat Lokasi"
           value={alamat}
           onChangeText={setAlamat}
         />
 
-        <Pressable style={styles.signupButton} onPress={handleSignUp}>
+        <Pressable
+          style={[buttonStyles.btnPrimary, buttonStyles.btnFull]}
+          onPress={handleSignUp}
+        >
           {isSubmitting ? (
             <ActivityIndicator color="#fff" />
           ) : (
-            <Text style={styles.signupText}>Simpan</Text>
+            <Text style={buttonStyles.btnPrimaryText}>Simpan</Text>
           )}
         </Pressable>
       </View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: "bold",
-    color: "#000",
-    marginTop: 80,
-    marginBottom: 20,
-    textAlign: "center",
-  },
-  formContainer: {
-    flex: 1,
-    paddingHorizontal: 20,
-    alignItems: "center",
-  },
-  input: {
-    width: "100%",
-    height: 50,
-    backgroundColor: "#f5f5f5",
-    borderRadius: 10,
-    paddingHorizontal: 15,
-    fontSize: 16,
-    marginBottom: 15,
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 2,
-  },
-  signupButton: {
-    width: "100%",
-    height: 50,
-    backgroundColor: Colors.primary,
-    borderRadius: 10,
-    alignItems: "center",
-    justifyContent: "center",
-    marginVertical: 10,
-  },
-  signupText: {
-    color: "#fff",
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  imagePlaceholder: {
-    width: 120,
-    height: 120,
-    backgroundColor: "#eee",
-    borderRadius: 60,
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 15,
-  },
-  imagePreview: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    marginBottom: 15,
-  },
-});

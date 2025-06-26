@@ -1,8 +1,8 @@
 import React from "react";
 import { View, Text, TextInput, Pressable } from "react-native";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
-import GlobalStyles from "@/styles/GlobalStyles";
-import { Colors } from "@/constant/theme";
+import { colors } from "@/constant/theme";
+import { textStyles } from "@/styles/TextStyles";
 
 type SearchInputProps = {
   openSearchBar: boolean;
@@ -34,7 +34,7 @@ const SearchInput = ({
             marginBottom: 16,
           }}
         >
-          <Text style={GlobalStyles.title}>{title}</Text>
+          <Text style={textStyles.title}>{title}</Text>
           <Pressable onPress={() => setOpenSearchBar(true)}>
             <FontAwesome name="search" size={24} color="gray" />
           </Pressable>
@@ -69,7 +69,7 @@ const SearchInput = ({
               paddingVertical: 8,
               paddingHorizontal: 12,
               borderRadius: 8,
-              backgroundColor: Colors.primary,
+              backgroundColor: colors.primary,
             }}
           >
             <Text style={{ color: "#fff", fontWeight: "bold" }}>Cari</Text>

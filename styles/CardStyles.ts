@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
-import { Colors } from "../constant/theme";
+import { colors } from "../constant/theme";
 
-const CardStyles = StyleSheet.create({
+const cardStyles = StyleSheet.create({
   card: {
     flexDirection: "column",
     alignItems: "center",
@@ -37,7 +37,7 @@ const CardStyles = StyleSheet.create({
     borderRadius: 100,
     paddingVertical: 4,
     paddingHorizontal: 12,
-    borderColor: Colors.primary,
+    borderColor: colors.primary,
   },
 
   card2: {
@@ -69,4 +69,4 @@ const CardStyles = StyleSheet.create({
   },
 });
 
-export default CardStyles;
+export default cardStyles;

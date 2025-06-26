@@ -9,13 +9,16 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/config/firebase";
-import GlobalStyles from "@/styles/GlobalStyles";
-import CardStyles from "@/styles/CardStyles";
+import cardStyles from "@/styles/CardStyles";
 import useFormattedDeadline from "@/hooks/useFormatedDeadline";
 import { useUserData } from "@/hooks/useUserData";
 import { Ionicons } from "@expo/vector-icons";
+import { containerStyles } from "@/styles/ContainerStyles";
+import { textStyles } from "@/styles/TextStyles";
+import { buttonStyles } from "@/styles/ButtonStyles";
+import { colors } from "@/constant/theme";
 
 export default function DetailPekerjaan() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -60,14 +63,16 @@ export default function DetailPekerjaan() {
   const formattedDeadline = useFormattedDeadline(data?.deadline);
 
   if (loading || loadingUserData || !show) {
-    return <ActivityIndicator style={{ marginTop: 40 }} />;
+    return (
+      <View style={containerStyles.container}>
+        <ActivityIndicator size="large" color={colors.primary} />
+      </View>
+    );
   }
 
   return (
-    <View style={GlobalStyles.container}>
-      <Text style={[GlobalStyles.title]}>
-        {data?.judul ?? "Tidak ada judul"}
-      </Text>
+    <View style={containerStyles.container}>
+      <Text style={[textStyles.title]}>{data?.judul ?? "Tidak ada judul"}</Text>
 
       <View
         style={{
@@ -85,41 +90,41 @@ export default function DetailPekerjaan() {
         <Text>{data?.dataUser?.nama}</Text>
       </View>
 
-      <View style={[CardStyles.card2, { gap: 8 }]}>
-        <Text style={[GlobalStyles.subTitle]}>Deskripsi pekerjaan</Text>
+      <View style={[cardStyles.card2, { gap: 8 }]}>
+        <Text style={[textStyles.subTitle]}>Deskripsi pekerjaan</Text>
         <Text>{data?.deskripsi}</Text>
       </View>
 
-      <View style={CardStyles.card2}>
+      <View style={cardStyles.card2}>
         <Text>
-          <Text style={[GlobalStyles.subTitle]}>Status: </Text>
+          <Text style={[textStyles.subTitle]}>Status: </Text>
           {data?.status}
         </Text>
       </View>
 
-      <View style={CardStyles.card2}>
+      <View style={cardStyles.card2}>
         <Text>
-          <Text style={[GlobalStyles.subTitle]}>Deadline: </Text>
+          <Text style={[textStyles.subTitle]}>Deadline: </Text>
           {formattedDeadline}
         </Text>
       </View>
 
-      <View style={[CardStyles.card2, { gap: 8 }]}>
-        <Text style={[GlobalStyles.subTitle]}>Alamat</Text>
+      <View style={[cardStyles.card2, { gap: 8 }]}>
+        <Text style={[textStyles.subTitle]}>Alamat</Text>
         <Text>{data?.alamat}</Text>
       </View>
 
       {show === "user" && (
-        <Pressable style={[GlobalStyles.btnPrimary, { marginVertical: 24 }]}>
+        <Pressable style={[buttonStyles.btnPrimary, { marginVertical: 24 }]}>
           <Ionicons name="chatbubble-ellipses" size={16} color="white" />
-          <Text style={GlobalStyles.btnPrimaryText}>Hubungi Penjahit</Text>
+          <Text style={buttonStyles.btnPrimaryText}>Hubungi Penjahit</Text>
         </Pressable>
       )}
 
       {show === "penjahit" && (
-        <Pressable style={[GlobalStyles.btnPrimary, { marginTop: 24 }]}>
+        <Pressable style={[buttonStyles.btnPrimary, { marginTop: 24 }]}>
           <Ionicons name="chatbubble-ellipses" size={16} color="white" />
-          <Text style={GlobalStyles.btnPrimaryText}>Hubungi Customer</Text>
+          <Text style={buttonStyles.btnPrimaryText}>Hubungi Customer</Text>
         </Pressable>
       )}
     </View>

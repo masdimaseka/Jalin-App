@@ -2,7 +2,7 @@ import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { AuthProvider } from "@/context/AuthContext";
-import { Colors } from "@/constant/theme";
+import { colors } from "@/constant/theme";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -11,7 +11,7 @@ export default function RootLayout() {
     <AuthProvider>
       <SafeAreaProvider>
         <SafeAreaView
-          style={{ flex: 1, backgroundColor: Colors.bg }}
+          style={{ flex: 1, backgroundColor: colors.bg }}
           edges={["top"]}
         >
           <Stack screenOptions={{ headerShown: false }} />

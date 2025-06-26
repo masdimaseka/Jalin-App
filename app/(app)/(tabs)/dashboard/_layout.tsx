@@ -1,4 +1,4 @@
-import { Colors } from "@/constant/theme";
+import { colors } from "@/constant/theme";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
@@ -9,7 +9,7 @@ export default function DashboardLayout() {
   return (
     <SafeAreaProvider>
       <SafeAreaView
-        style={{ flex: 1, backgroundColor: Colors.bg }}
+        style={{ flex: 1, backgroundColor: colors.bg }}
         edges={["top"]}
       >
         <Stack>

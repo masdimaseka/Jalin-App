@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
-import { Colors } from "../constant/theme";
+import { colors } from "../constant/theme";
 
-const ProfileStyles = StyleSheet.create({
+const profileStyles = StyleSheet.create({
   profileDescContainer: {
     padding: 24,
     backgroundColor: "#fff",
@@ -19,4 +19,4 @@ const ProfileStyles = StyleSheet.create({
   },
 });
 
-export default ProfileStyles;
+export default profileStyles;

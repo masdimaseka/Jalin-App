@@ -8,14 +8,15 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import Header from "@/components/Header";
-import GlobalStyles from "@/styles/GlobalStyles";
 import SearchInput from "@/components/SearchInput";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import CardPekerjaan from "@/components/CardPekerjaan";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "@/config/firebase";
-import { Colors } from "@/constant/theme";
+import { colors } from "@/constant/theme";
+import { containerStyles } from "@/styles/ContainerStyles";
+import { buttonStyles } from "@/styles/ButtonStyles";
 
 type DataItemPekerjaan = {
   id: string;
@@ -61,8 +62,17 @@ export default function IndexJahitan() {
     return item.status === "pending" && matchJudul;
   });
 
+  if (loading) {
+    return (
+      <View style={containerStyles.container}>
+        <Header />
+        <ActivityIndicator size="large" color={colors.primary} />
+      </View>
+    );
+  }
+
   return (
-    <View style={GlobalStyles.container}>
+    <View style={containerStyles.container}>
       <Header />
 
       <SearchInput
@@ -75,41 +85,37 @@ export default function IndexJahitan() {
         title="Jahitan"
       />
 
-      {loading ? (
-        <ActivityIndicator style={{ marginTop: 40 }} />
-      ) : (
-        <FlatList
-          data={filteredData}
-          keyExtractor={(item) => item.id}
-          initialNumToRender={5}
-          contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 100 }}
-          renderItem={({ item }) => (
-            <Pressable
-              onPress={() =>
-                router.push({
-                  pathname: "/(app)/(tabs)/jahitan/[id]",
-                  params: { id: item.id },
-                })
-              }
-            >
-              <CardPekerjaan
-                judul={item.judul}
-                deadline={item.deadline}
-                dataUser={item.dataUser}
-                alamat={item.alamat}
-              />
-            </Pressable>
-          )}
-          ListEmptyComponent={
-            <Text style={{ textAlign: "center", marginTop: 20 }}>
-              Tidak ada hasil yang ditemukan
-            </Text>
-          }
-        />
-      )}
+      <FlatList
+        data={filteredData}
+        keyExtractor={(item) => item.id}
+        initialNumToRender={5}
+        contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 100 }}
+        renderItem={({ item }) => (
+          <Pressable
+            onPress={() =>
+              router.push({
+                pathname: "/(app)/(tabs)/jahitan/[id]",
+                params: { id: item.id },
+              })
+            }
+          >
+            <CardPekerjaan
+              judul={item.judul}
+              deadline={item.deadline}
+              dataUser={item.dataUser}
+              alamat={item.alamat}
+            />
+          </Pressable>
+        )}
+        ListEmptyComponent={
+          <Text style={{ textAlign: "center", marginTop: 20 }}>
+            Tidak ada hasil yang ditemukan
+          </Text>
+        }
+      />
 
       <Pressable
-        style={styles.createButton}
+        style={buttonStyles.btnFloatBR}
         onPress={() => router.push("/(app)/(tabs)/jahitan/create")}
       >
         <MaterialCommunityIcons
@@ -124,21 +130,3 @@ export default function IndexJahitan() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  createButton: {
-    position: "absolute",
-    bottom: 24,
-    right: 24,
-    backgroundColor: Colors.primary,
-    borderRadius: 28,
-    justifyContent: "center",
-    alignItems: "center",
-    flexDirection: "row",
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    alignContent: "center",
-    gap: 8,
-    elevation: 4,
-  },
-});

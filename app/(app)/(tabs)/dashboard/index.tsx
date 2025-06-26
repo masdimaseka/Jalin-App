@@ -8,13 +8,15 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import Header from "@/components/Header";
-import GlobalStyles from "@/styles/GlobalStyles";
 import { useRouter } from "expo-router";
 import CardPekerjaan from "@/components/CardPekerjaan";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "@/config/firebase";
 import { useUserData } from "@/hooks/useUserData";
-import { Colors } from "@/constant/theme";
+import { colors } from "@/constant/theme";
+import { Entypo, FontAwesome5 } from "@expo/vector-icons";
+import { containerStyles } from "@/styles/ContainerStyles";
+import { buttonStyles } from "@/styles/ButtonStyles";
 
 type DataItemPekerjaan = {
   id: string;
@@ -60,25 +62,43 @@ export default function IndexDashboard() {
     show === "user" ? filteredDataAsUser : filteredDataAsPenjahit;
 
   if (loading || loadingUserData) {
-    return <ActivityIndicator style={{ marginTop: 40 }} />;
+    return (
+      <View style={containerStyles.container}>
+        <Header />
+        <ActivityIndicator size="large" color={colors.primary} />
+      </View>
+    );
   }
 
   return (
-    <View style={GlobalStyles.container}>
+    <View style={containerStyles.container}>
       <Header />
 
-      <View style={styles.tabButtonContainer}>
+      <View style={buttonStyles.btnTabContainer}>
         <Pressable
           style={[
-            styles.tabButton,
-            show === "user" ? styles.tabButtonActive : styles.tabButtonInactive,
+            buttonStyles.btnTab,
+            show === "user"
+              ? buttonStyles.btnTabActive
+              : buttonStyles.btnTabInactive,
           ]}
           onPress={() => setShow("user")}
         >
+          <FontAwesome5
+            name="tshirt"
+            size={16}
+            style={[
+              show === "user"
+                ? buttonStyles.btnTabIconActive
+                : buttonStyles.btnTabIconInactive,
+            ]}
+          />
           <Text
             style={[
-              styles.tabButtonText,
-              show === "user" ? styles.tabTextActive : styles.tabTextInactive,
+              buttonStyles.btnTabText,
+              show === "user"
+                ? buttonStyles.btnTabTextActive
+                : buttonStyles.btnTabTextInactive,
             ]}
           >
             Jahitan Saya
@@ -88,19 +108,28 @@ export default function IndexDashboard() {
         {userData?.role === "penjahit" && (
           <Pressable
             style={[
-              styles.tabButton,
+              buttonStyles.btnTab,
               show === "penjahit"
-                ? styles.tabButtonActive
-                : styles.tabButtonInactive,
+                ? buttonStyles.btnTabActive
+                : buttonStyles.btnTabInactive,
             ]}
             onPress={() => setShow("penjahit")}
           >
+            <Entypo
+              name="briefcase"
+              size={16}
+              style={[
+                show === "penjahit"
+                  ? buttonStyles.btnTabIconActive
+                  : buttonStyles.btnTabIconInactive,
+              ]}
+            />
             <Text
               style={[
-                styles.tabButtonText,
+                buttonStyles.btnTabText,
                 show === "penjahit"
-                  ? styles.tabTextActive
-                  : styles.tabTextInactive,
+                  ? buttonStyles.btnTabTextActive
+                  : buttonStyles.btnTabTextInactive,
               ]}
             >
               Pekerjaan Saya
@@ -140,34 +169,3 @@ export default function IndexDashboard() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  tabButtonContainer: {
-    marginBottom: 20,
-    flexDirection: "row",
-    gap: 8,
-  },
-  tabButton: {
-    borderRadius: 8,
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    alignItems: "center",
-  },
-  tabButtonActive: {
-    backgroundColor: Colors.primary,
-  },
-  tabButtonInactive: {
-    borderWidth: 1,
-    borderColor: Colors.primary,
-    backgroundColor: "transparent",
-  },
-  tabButtonText: {
-    fontWeight: "bold",
-  },
-  tabTextActive: {
-    color: "white",
-  },
-  tabTextInactive: {
-    color: Colors.primary,
-  },
-});
