@@ -55,8 +55,12 @@ const Profile = () => {
       <View style={cardStyles.card}>
         <View>
           <Image
-            source={require("@/assets/images/avatar.png")}
-            style={{ width: 80, height: 80 }}
+            source={
+              userData?.profileImg
+                ? { uri: userData.profileImg }
+                : require("@/assets/images/avatar.png")
+            }
+            style={{ width: 80, height: 80, borderRadius: 40 }}
           />
         </View>
         <View>
@@ -80,13 +84,15 @@ const Profile = () => {
               />
               <Text>{userData?.email || "-"}</Text>
             </View>
-            <View style={cardStyles.cardContent}>
+            <View
+              style={[cardStyles.cardContent, { alignItems: "flex-start" }]}
+            >
               <FontAwesome6
                 name="map-location-dot"
                 size={16}
                 style={{ color: colors.primary }}
               />
-              <Text>{userData?.lokasi || "-"}</Text>
+              <Text>{userData?.alamat || "-"}</Text>
             </View>
           </View>
         </View>

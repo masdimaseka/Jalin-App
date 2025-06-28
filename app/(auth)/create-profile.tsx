@@ -5,6 +5,8 @@ import {
   View,
   ActivityIndicator,
   Pressable,
+  Image,
+  Alert,
 } from "react-native";
 import { useState, useContext, useEffect } from "react";
 import { db } from "@/config/firebase";
@@ -15,39 +17,19 @@ import { containerStyles } from "@/styles/ContainerStyles";
 import { textStyles } from "@/styles/TextStyles";
 import { inputStyles } from "@/styles/InputStyles";
 import { buttonStyles } from "@/styles/ButtonStyles";
+import { usePickImage } from "@/hooks/usePickImage";
+import { useGetLocation } from "@/hooks/useGetLocation";
+import { uploadImageToCloudinary } from "@/service/cloudinaryService";
 
 export default function CreateProfile() {
   const router = useRouter();
-  const { user, loading } = useContext(AuthContext);
 
   const [nama, setNama] = useState("");
   const [noTelp, setNoTelp] = useState("");
-  const [alamat, setAlamat] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        alert("Izin lokasi ditolak");
-        return;
-      }
-
-      const lokasiSaatIni = await Location.getCurrentPositionAsync({});
-      const geo = await Location.reverseGeocodeAsync({
-        latitude: lokasiSaatIni.coords.latitude,
-        longitude: lokasiSaatIni.coords.longitude,
-      });
-
-      if (geo.length > 0) {
-        const g = geo[0];
-        const alamatLengkap = `${g.street || g.name || ""}, ${
-          g.city || g.subregion || ""
-        }`;
-        setAlamat(alamatLengkap);
-      }
-    })();
-  }, []);
+  const { user, loading } = useContext(AuthContext);
+  const { image, pickImage } = usePickImage();
+  const { alamat, setAlamat } = useGetLocation();
 
   const handleSignUp = async () => {
     if (!nama || !noTelp || !alamat) {
@@ -62,14 +44,27 @@ export default function CreateProfile() {
         return;
       }
 
+      let imageUrl = "";
+      if (image) {
+        imageUrl = await uploadImageToCloudinary(
+          image,
+          "profile",
+          `profile_${user.uid}`
+        );
+      }
+
       await updateDoc(doc(db, "users", user.uid), {
         nama,
         noTelp,
-        lokasi: alamat,
+        alamat,
+        profileImg: imageUrl || null,
         createdAt: new Date().toISOString(),
       });
 
-      alert("Akun berhasil dibuat! & pastikan sudah verifikasi email.");
+      Alert.alert(
+        "Akun berhasil dibuat!",
+        "Pastikan sudah verifikasi email agar dapat login."
+      );
       router.push("/(auth)/login");
     } catch (error: any) {
       console.error("Error registering:", error);
@@ -84,26 +79,64 @@ export default function CreateProfile() {
   return (
     <View style={containerStyles.container}>
       <View style={containerStyles.formContainer}>
-        <Text style={textStyles.title}>Create Profile</Text>
-        <TextInput
-          style={inputStyles.input}
-          placeholder="Nama"
-          value={nama}
-          onChangeText={setNama}
-        />
-        <TextInput
-          style={inputStyles.input}
-          placeholder="No Telepon"
-          value={noTelp}
-          onChangeText={setNoTelp}
-          keyboardType="phone-pad"
-        />
-        <TextInput
-          style={inputStyles.input}
-          placeholder="Alamat Lokasi"
-          value={alamat}
-          onChangeText={setAlamat}
-        />
+        <Text style={textStyles.title}>Buat Profile</Text>
+
+        <View style={{ width: "100%" }}>
+          {image && (
+            <Image
+              source={{ uri: image }}
+              style={{
+                width: 120,
+                height: 120,
+                marginVertical: 10,
+                borderRadius: 100,
+                alignSelf: "center",
+              }}
+              resizeMode="cover"
+            />
+          )}
+
+          <Text style={{ marginBottom: 8 }}>Unggah gambar</Text>
+          <Pressable
+            style={[buttonStyles.btnSecondary, buttonStyles.btnFull]}
+            onPress={pickImage}
+          >
+            <Text style={buttonStyles.btnSecondaryText}>
+              {image ? "Ganti Gambar" : "Pilih Gambar"}
+            </Text>
+          </Pressable>
+        </View>
+
+        <View style={{ width: "100%" }}>
+          <Text style={{ marginBottom: 8 }}>Nama Lengkap</Text>
+          <TextInput
+            style={inputStyles.input}
+            placeholder="Nama"
+            value={nama}
+            onChangeText={setNama}
+          />
+        </View>
+
+        <View style={{ width: "100%" }}>
+          <Text style={{ marginBottom: 8 }}>No Telepon</Text>
+          <TextInput
+            style={inputStyles.input}
+            placeholder="08xx-xxxx-xxxx"
+            value={noTelp}
+            onChangeText={setNoTelp}
+            keyboardType="phone-pad"
+          />
+        </View>
+
+        <View style={{ width: "100%" }}>
+          <Text style={{ marginBottom: 8 }}>Alamat</Text>
+          <TextInput
+            style={inputStyles.input}
+            placeholder="Alamat Lokasi"
+            value={alamat}
+            onChangeText={setAlamat}
+          />
+        </View>
 
         <Pressable
           style={[buttonStyles.btnPrimary, buttonStyles.btnFull]}

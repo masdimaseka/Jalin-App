@@ -25,6 +25,7 @@ type DataItemPekerjaan = {
   status: string;
   dataUser: any;
   alamat: string;
+  gambar: string;
 };
 
 export default function IndexJahitan() {
@@ -104,6 +105,7 @@ export default function IndexJahitan() {
               deadline={item.deadline}
               dataUser={item.dataUser}
               alamat={item.alamat}
+              gambar={item.gambar}
             />
           </Pressable>
         )}

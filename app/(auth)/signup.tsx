@@ -5,6 +5,7 @@ import {
   View,
   ActivityIndicator,
   Pressable,
+  Alert,
 } from "react-native";
 import { useState } from "react";
 import { auth, db } from "@/config/firebase";
@@ -56,12 +57,12 @@ export default function Signup() {
 
       await sendEmailVerification(user);
 
-      alert(
+      Alert.alert(
+        "Berhasil mendaftar!",
         "Akun berhasil dibuat! Silakan verifikasi melalui email & lengkapi profile."
       );
       router.push("/(auth)/create-profile");
     } catch (error: any) {
-      console.error("Error registering:", error);
       alert("Gagal daftar: " + error.message);
     } finally {
       setIsSubmitting(false);

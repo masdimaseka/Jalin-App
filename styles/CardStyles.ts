@@ -14,6 +14,7 @@ const cardStyles = StyleSheet.create({
     borderColor: "lightgray",
   },
   cardContentContainer: {
+    padding: 24,
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "center",
