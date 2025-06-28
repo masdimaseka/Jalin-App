@@ -3,9 +3,8 @@ import {
   Text,
   ActivityIndicator,
   Image,
-  StyleSheet,
   Pressable,
-  Alert,
+  ScrollView,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
@@ -24,7 +23,6 @@ export default function DetailPekerjaan() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [show, setShow] = useState<"user" | "penjahit" | null>(null);
 
   const { userData, loadingUserData } = useUserData();
 
@@ -37,14 +35,6 @@ export default function DetailPekerjaan() {
         if (docSnap.exists()) {
           const detail = docSnap.data();
           setData(detail);
-
-          if (userData?.uid) {
-            if (detail?.dataUser?.uid === userData.uid) {
-              setShow("user");
-            } else if (detail?.dataPenjahit?.uid === userData.uid) {
-              setShow("penjahit");
-            }
-          }
         } else {
           console.warn("Dokumen tidak ditemukan");
         }
@@ -62,7 +52,7 @@ export default function DetailPekerjaan() {
 
   const formattedDeadline = useFormattedDeadline(data?.deadline);
 
-  if (loading || loadingUserData || !show) {
+  if (loading || loadingUserData) {
     return (
       <View style={containerStyles.container}>
         <ActivityIndicator size="large" color={colors.primary} />
@@ -72,59 +62,83 @@ export default function DetailPekerjaan() {
 
   return (
     <View style={containerStyles.container}>
-      <Text style={[textStyles.title]}>{data?.judul ?? "Tidak ada judul"}</Text>
+      <ScrollView>
+        <Text style={[textStyles.title]}>
+          {data?.judul ?? "Tidak ada judul"}
+        </Text>
 
-      <View
-        style={{
-          marginTop: 8,
-          flexDirection: "row",
-          alignItems: "center",
-          gap: 8,
-          marginBottom: 20,
-        }}
-      >
         <Image
-          source={require("@/assets/images/avatar.png")}
-          style={{ width: 24, height: 24 }}
+          source={{ uri: data?.gambar }}
+          style={{
+            width: "100%",
+            height: 200,
+            marginVertical: 10,
+            borderRadius: 10,
+          }}
+          resizeMode="cover"
         />
-        <Text>{data?.dataUser?.nama}</Text>
-      </View>
 
-      <View style={[cardStyles.card2, { gap: 8 }]}>
-        <Text style={[textStyles.subTitle]}>Deskripsi pekerjaan</Text>
-        <Text>{data?.deskripsi}</Text>
-      </View>
-
-      <View style={cardStyles.card2}>
-        <Text>
-          <Text style={[textStyles.subTitle]}>Status: </Text>
-          {data?.status}
+        <Text style={[textStyles.subTitle, { marginTop: 12 }]}>
+          Penjahit :{" "}
         </Text>
-      </View>
+        {data?.dataPenjahit.uid ? (
+          <View
+            style={{
+              marginTop: 8,
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 8,
+              marginBottom: 10,
+            }}
+          >
+            <Image
+              source={
+                data?.dataUser?.profileImg
+                  ? { uri: data?.dataUser?.profileImg }
+                  : require("@/assets/images/avatar.png")
+              }
+              style={{ width: 24, height: 24, borderRadius: 24 }}
+            />
+            <Text>{data?.dataUser?.nama}</Text>
+          </View>
+        ) : (
+          <Text style={[{ marginTop: 8, marginBottom: 20 }]}>
+            Belum ada penjahit
+          </Text>
+        )}
 
-      <View style={cardStyles.card2}>
-        <Text>
-          <Text style={[textStyles.subTitle]}>Deadline: </Text>
-          {formattedDeadline}
+        <Text style={[textStyles.title, { marginTop: 12, marginBottom: 20 }]}>
+          Detail Pekerjaan
         </Text>
-      </View>
 
-      <View style={[cardStyles.card2, { gap: 8 }]}>
-        <Text style={[textStyles.subTitle]}>Alamat</Text>
-        <Text>{data?.alamat}</Text>
-      </View>
+        <View style={[cardStyles.card2, { gap: 8 }]}>
+          <Text style={[textStyles.subTitle]}>Deskripsi pekerjaan</Text>
+          <Text>{data?.deskripsi}</Text>
+        </View>
 
-      {show === "user" && (
+        <View style={cardStyles.card2}>
+          <Text>
+            <Text style={[textStyles.subTitle]}>Status: </Text>
+            {data?.status}
+          </Text>
+        </View>
+
+        <View style={cardStyles.card2}>
+          <Text>
+            <Text style={[textStyles.subTitle]}>Deadline: </Text>
+            {formattedDeadline}
+          </Text>
+        </View>
+
+        <View style={[cardStyles.card2, { gap: 8 }]}>
+          <Text style={[textStyles.subTitle]}>Alamat</Text>
+          <Text>{data?.alamat}</Text>
+        </View>
+      </ScrollView>
+      {data?.dataPenjahit.uid && (
         <Pressable style={[buttonStyles.btnPrimary, { marginVertical: 24 }]}>
           <Ionicons name="chatbubble-ellipses" size={16} color="white" />
           <Text style={buttonStyles.btnPrimaryText}>Hubungi Penjahit</Text>
-        </Pressable>
-      )}
-
-      {show === "penjahit" && (
-        <Pressable style={[buttonStyles.btnPrimary, { marginTop: 24 }]}>
-          <Ionicons name="chatbubble-ellipses" size={16} color="white" />
-          <Text style={buttonStyles.btnPrimaryText}>Hubungi Customer</Text>
         </Pressable>
       )}
     </View>

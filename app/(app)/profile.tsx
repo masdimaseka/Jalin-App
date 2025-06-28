@@ -48,7 +48,12 @@ const Profile = () => {
     }
   };
 
-  if (loading) return <ActivityIndicator style={{ flex: 1 }} size="large" />;
+  if (loading)
+    return (
+      <View style={containerStyles.container}>
+        <ActivityIndicator size="large" color={colors.primary} />
+      </View>
+    );
 
   return (
     <View style={containerStyles.container}>
@@ -108,7 +113,7 @@ const Profile = () => {
         <Text style={buttonStyles.btnPrimaryText}>Log Out</Text>
       </Pressable>
 
-      {userData?.role !== "penjahit" ? (
+      {userData?.role !== "penjahit" && (
         <View style={[cardStyles.card2, { marginTop: 20 }]}>
           <Text style={textStyles.subTitle}>Ingin menjadi penjahit?</Text>
           <Pressable
@@ -117,31 +122,6 @@ const Profile = () => {
           >
             <Text style={buttonStyles.btnPrimaryText}>Daftar Sekarang</Text>
           </Pressable>
-        </View>
-      ) : (
-        <View style={[cardStyles.card2, { marginTop: 20 }]}>
-          <View
-            style={{
-              paddingBottom: 16,
-              marginBottom: 16,
-              borderBottomWidth: 1,
-              borderColor: "lightgray",
-            }}
-          >
-            <Text style={[cardStyles.cardTitle]}>Informasi Penjahit</Text>
-          </View>
-          <View>
-            <Text style={[textStyles.subTitle, { marginBottom: 8 }]}>
-              Deskripsi penjahit
-            </Text>
-            <Text>{userData?.dataPenjahit?.deskripsi}</Text>
-          </View>
-          <View>
-            <Text style={[textStyles.subTitle, { marginBottom: 8 }]}>
-              Rata-rata biaya jasa
-            </Text>
-            <Text>{userData?.dataPenjahit?.rataRataBiaya}</Text>
-          </View>
         </View>
       )}
     </View>

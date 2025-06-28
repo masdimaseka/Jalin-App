@@ -1,44 +1,41 @@
 import {
   View,
   Text,
+  ActivityIndicator,
   Pressable,
   FlatList,
-  ActivityIndicator,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import Header from "@/components/Header";
-import SearchInput from "@/components/SearchInput";
-import { useRouter } from "expo-router";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "@/config/firebase";
-import CardPenjahit from "@/components/CardPenjahit";
-import { containerStyles } from "@/styles/ContainerStyles";
+import { useUserData } from "@/hooks/useUserData";
+import { useRouter } from "expo-router";
 import { colors } from "@/constant/theme";
+import { containerStyles } from "@/styles/ContainerStyles";
+import CardPekerjaan from "@/components/CardPekerjaan";
+import { textStyles } from "@/styles/TextStyles";
 
 type DataItemPekerjaan = {
   id: string;
+  judul: string;
+  deadline: string;
+  status: string;
+  dataUser: any;
   dataPenjahit: any;
-  nama: string;
-  role: string;
   alamat: string;
-  profileImg: string;
+  gambar: string;
 };
 
-export default function IndexPenjahit() {
-  const [openSearchBar, setOpenSearchBar] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [submittedQuery, setSubmittedQuery] = useState("");
+export default function indexMyJahitan() {
   const [data, setData] = useState<DataItemPekerjaan[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const { userData, loadingUserData } = useUserData();
+
   const router = useRouter();
 
-  const handleSubmitSearch = (query: string) => {
-    setSubmittedQuery(query);
-  };
-
   useEffect(() => {
-    const unsubscribe = onSnapshot(collection(db, "users"), (snapshot) => {
+    const unsubscribe = onSnapshot(collection(db, "jahitan"), (snapshot) => {
       const list = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
@@ -51,17 +48,13 @@ export default function IndexPenjahit() {
     return () => unsubscribe();
   }, []);
 
-  const filteredData = data.filter((item) => {
-    const query = submittedQuery.toLowerCase();
-    const matchNama = item.nama?.toLowerCase().includes(query);
+  const filteredDataAsUser = data.filter(
+    (item) => item.dataUser?.uid === userData?.uid
+  );
 
-    return item.role === "penjahit" && matchNama;
-  });
-
-  if (loading) {
+  if (loading || loadingUserData) {
     return (
       <View style={containerStyles.container}>
-        <Header />
         <ActivityIndicator size="large" color={colors.primary} />
       </View>
     );
@@ -69,20 +62,11 @@ export default function IndexPenjahit() {
 
   return (
     <View style={containerStyles.container}>
-      <Header />
-
-      <SearchInput
-        openSearchBar={openSearchBar}
-        setOpenSearchBar={setOpenSearchBar}
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-        onSubmitSearch={handleSubmitSearch}
-        placeholder="Cari penjahit..."
-        title="Penjahit"
-      />
-
+      <Text style={[textStyles.title, { marginBottom: 20 }]}>
+        Daftar Jahitan Saya
+      </Text>
       <FlatList
-        data={filteredData}
+        data={filteredDataAsUser}
         keyExtractor={(item) => item.id}
         initialNumToRender={5}
         contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 100 }}
@@ -90,16 +74,17 @@ export default function IndexPenjahit() {
           <Pressable
             onPress={() =>
               router.push({
-                pathname: "/(app)/(tabs)/penjahit/[id]",
+                pathname: "/(app)/(tabs)/dashboard/my-jahitan/[id]",
                 params: { id: item.id },
               })
             }
           >
-            <CardPenjahit
-              nama={item.nama}
+            <CardPekerjaan
+              judul={item.judul}
+              deadline={item.deadline}
+              dataUser={item.dataUser}
               alamat={item.alamat}
-              profileImg={item.profileImg}
-              dataPenjahit={item.dataPenjahit}
+              gambar={item.gambar}
             />
           </Pressable>
         )}

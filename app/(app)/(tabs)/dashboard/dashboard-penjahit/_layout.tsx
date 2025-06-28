@@ -5,7 +5,7 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 SplashScreen.preventAutoHideAsync();
 
-export default function DashboardLayout() {
+export default function DashboardPenjahitLayout() {
   return (
     <SafeAreaProvider>
       <SafeAreaView
@@ -14,11 +14,7 @@ export default function DashboardLayout() {
       >
         <Stack>
           <Stack.Screen name="index" options={{ headerShown: false }} />
-          <Stack.Screen name="my-jahitan" options={{ headerShown: false }} />
-          <Stack.Screen
-            name="dashboard-penjahit"
-            options={{ headerShown: false }}
-          />
+          <Stack.Screen name="[id]" options={{ title: "Detail Pekerjaan" }} />
         </Stack>
       </SafeAreaView>
     </SafeAreaProvider>

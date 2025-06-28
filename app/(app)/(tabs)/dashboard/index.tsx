@@ -1,22 +1,13 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  Pressable,
-  FlatList,
-  ActivityIndicator,
-} from "react-native";
+import { View, Text, Pressable, ActivityIndicator } from "react-native";
 import React, { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import { useRouter } from "expo-router";
-import CardPekerjaan from "@/components/CardPekerjaan";
-import { collection, onSnapshot } from "firebase/firestore";
-import { db } from "@/config/firebase";
 import { useUserData } from "@/hooks/useUserData";
 import { colors } from "@/constant/theme";
 import { Entypo, FontAwesome5 } from "@expo/vector-icons";
 import { containerStyles } from "@/styles/ContainerStyles";
 import { buttonStyles } from "@/styles/ButtonStyles";
+import { textStyles } from "@/styles/TextStyles";
 
 type DataItemPekerjaan = {
   id: string;
@@ -26,45 +17,16 @@ type DataItemPekerjaan = {
   dataUser: any;
   dataPenjahit: any;
   alamat: string;
+  gambar: string;
 };
 
 export default function IndexDashboard() {
-  const [show, setShow] = useState<"user" | "penjahit">("user");
-  const [data, setData] = useState<DataItemPekerjaan[]>([]);
-  const [loading, setLoading] = useState(true);
-
   const router = useRouter();
   const { userData, loadingUserData } = useUserData();
 
-  useEffect(() => {
-    const unsubscribe = onSnapshot(collection(db, "jahitan"), (snapshot) => {
-      const list = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as DataItemPekerjaan[];
-
-      setData(list);
-      setLoading(false);
-    });
-
-    return () => unsubscribe();
-  }, []);
-
-  const filteredDataAsUser = data.filter(
-    (item) => item.dataUser?.uid === userData?.uid
-  );
-
-  const filteredDataAsPenjahit = data.filter(
-    (item) => item.dataPenjahit?.uid === userData?.uid
-  );
-
-  const currentData =
-    show === "user" ? filteredDataAsUser : filteredDataAsPenjahit;
-
-  if (loading || loadingUserData) {
+  if (loadingUserData) {
     return (
       <View style={containerStyles.container}>
-        <Header />
         <ActivityIndicator size="large" color={colors.primary} />
       </View>
     );
@@ -74,98 +36,56 @@ export default function IndexDashboard() {
     <View style={containerStyles.container}>
       <Header />
 
-      <View style={buttonStyles.btnTabContainer}>
+      <Text style={[textStyles.title, { marginBottom: 20 }]}>
+        Menu Dashboard
+      </Text>
+
+      <View>
         <Pressable
-          style={[
-            buttonStyles.btnTab,
-            show === "user"
-              ? buttonStyles.btnTabActive
-              : buttonStyles.btnTabInactive,
-          ]}
-          onPress={() => setShow("user")}
+          style={[buttonStyles.menuBtn, { marginBottom: 20, width: "100%" }]}
+          onPress={() => {
+            router.push("/(app)/(tabs)/dashboard/my-jahitan");
+          }}
         >
           <FontAwesome5
             name="tshirt"
-            size={16}
-            style={[
-              show === "user"
-                ? buttonStyles.btnTabIconActive
-                : buttonStyles.btnTabIconInactive,
-            ]}
+            size={32}
+            color="white"
+            style={{ marginBottom: 10 }}
           />
-          <Text
-            style={[
-              buttonStyles.btnTabText,
-              show === "user"
-                ? buttonStyles.btnTabTextActive
-                : buttonStyles.btnTabTextInactive,
-            ]}
-          >
-            Jahitan Saya
-          </Text>
+          <Text style={buttonStyles.menuBtnText}>Daftar Jahitan Saya</Text>
         </Pressable>
 
-        {userData?.role === "penjahit" && (
+        {userData?.role === "penjahit" ? (
           <Pressable
-            style={[
-              buttonStyles.btnTab,
-              show === "penjahit"
-                ? buttonStyles.btnTabActive
-                : buttonStyles.btnTabInactive,
-            ]}
-            onPress={() => setShow("penjahit")}
+            style={[buttonStyles.menuBtn, { marginBottom: 20, width: "100%" }]}
+            onPress={() =>
+              router.push("/(app)/(tabs)/dashboard/dashboard-penjahit")
+            }
           >
             <Entypo
               name="briefcase"
-              size={16}
-              style={[
-                show === "penjahit"
-                  ? buttonStyles.btnTabIconActive
-                  : buttonStyles.btnTabIconInactive,
-              ]}
+              size={32}
+              color="white"
+              style={{ marginBottom: 10 }}
             />
-            <Text
-              style={[
-                buttonStyles.btnTabText,
-                show === "penjahit"
-                  ? buttonStyles.btnTabTextActive
-                  : buttonStyles.btnTabTextInactive,
-              ]}
-            >
-              Pekerjaan Saya
-            </Text>
+            <Text style={buttonStyles.menuBtnText}>Dashboard Penjahit</Text>
+          </Pressable>
+        ) : (
+          <Pressable
+            style={[buttonStyles.menuBtn, { marginBottom: 20, width: "100%" }]}
+            onPress={() => router.push("/(app)/register-penjahit")}
+          >
+            <Entypo
+              name="briefcase"
+              size={32}
+              color="white"
+              style={{ marginBottom: 10 }}
+            />
+            <Text style={buttonStyles.menuBtnText}>Daftar Penjahit</Text>
           </Pressable>
         )}
       </View>
-
-      <FlatList
-        data={currentData}
-        keyExtractor={(item) => item.id}
-        initialNumToRender={5}
-        contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 100 }}
-        renderItem={({ item }) => (
-          <Pressable
-            onPress={() =>
-              router.push({
-                pathname: "/(app)/(tabs)/dashboard/[id]",
-                params: { id: item.id },
-              })
-            }
-          >
-            <CardPekerjaan
-              judul={item.judul}
-              deadline={item.deadline}
-              dataUser={item.dataUser}
-              alamat={item.alamat}
-            />
-          </Pressable>
-        )}
-        ListEmptyComponent={
-          <Text style={{ textAlign: "center", marginTop: 20 }}>
-            Tidak ada hasil yang ditemukan
-          </Text>
-        }
-      />
     </View>
   );
 }

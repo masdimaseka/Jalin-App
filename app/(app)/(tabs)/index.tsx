@@ -16,6 +16,7 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { containerStyles } from "@/styles/ContainerStyles";
 import { textStyles } from "@/styles/TextStyles";
 import { useRouter } from "expo-router";
+import { buttonStyles } from "@/styles/ButtonStyles";
 
 export default function Index() {
   const { userData, loadingUserData } = useUserData();
@@ -60,7 +61,7 @@ export default function Index() {
 
           <View style={styles.menuContainer}>
             <Pressable
-              style={styles.menuBtn}
+              style={buttonStyles.menuBtn}
               onPress={() => {
                 userData?.role === "penjahit"
                   ? router.push("/(app)/profile")
@@ -73,11 +74,13 @@ export default function Index() {
                 color="white"
                 style={{ marginBottom: 10 }}
               />
-              <Text style={styles.menuBtnText}>Bergabung Sebagai Penjahit</Text>
+              <Text style={buttonStyles.menuBtnText}>
+                Bergabung Sebagai Penjahit
+              </Text>
             </Pressable>
 
             <Pressable
-              style={styles.menuBtn}
+              style={buttonStyles.menuBtn}
               onPress={() => router.push("/(app)/(tabs)/jahitan")}
             >
               <MaterialIcons
@@ -86,7 +89,9 @@ export default function Index() {
                 color="white"
                 style={{ marginBottom: 10 }}
               />
-              <Text style={styles.menuBtnText}>Eksplorasi Temukan Jahitan</Text>
+              <Text style={buttonStyles.menuBtnText}>
+                Eksplorasi Temukan Jahitan
+              </Text>
             </Pressable>
           </View>
 
@@ -151,16 +156,6 @@ const styles = StyleSheet.create({
     marginVertical: 28,
     flexDirection: "row",
     justifyContent: "space-between",
-  },
-  menuBtn: {
-    backgroundColor: colors.primary,
-    borderRadius: 16,
-    width: "48%",
-    padding: 16,
-  },
-  menuBtnText: {
-    color: "white",
-    fontWeight: "bold",
   },
   featureContainer: {
     marginBottom: 40,

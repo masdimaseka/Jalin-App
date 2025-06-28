@@ -87,4 +87,14 @@ export const buttonStyles = StyleSheet.create({
     gap: 8,
     elevation: 4,
   },
+  menuBtn: {
+    backgroundColor: colors.primary,
+    borderRadius: 16,
+    width: "48%",
+    padding: 16,
+  },
+  menuBtnText: {
+    color: "white",
+    fontWeight: "bold",
+  },
 });

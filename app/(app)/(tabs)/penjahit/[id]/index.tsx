@@ -72,8 +72,9 @@ export default function DetailPenjahit() {
       <ScrollView>
         <CardPenjahit
           nama={data.nama}
-          lokasi={data.lokasi}
+          alamat={data.alamat}
           dataPenjahit={data.dataPenjahit}
+          profileImg={data.profileImg}
         />
 
         <View style={profileStyles.profileDescContainer}>
@@ -99,10 +100,7 @@ export default function DetailPenjahit() {
         </View>
 
         <Pressable
-          style={[
-            buttonStyles.btnSecondary,
-            { marginTop: 12, marginBottom: 12 },
-          ]}
+          style={[buttonStyles.btnPrimary, { marginTop: 12, marginBottom: 12 }]}
           onPress={() =>
             router.push({
               pathname: "/(app)/(tabs)/penjahit/[id]/riwayat",
@@ -110,13 +108,8 @@ export default function DetailPenjahit() {
             })
           }
         >
-          <Fontisto name="history" size={16} color={colors.primary} />
-          <Text style={buttonStyles.btnSecondaryText}>Riwayat Pekerjaan</Text>
-        </Pressable>
-
-        <Pressable style={[buttonStyles.btnPrimary]}>
-          <Ionicons name="chatbubble-ellipses" size={16} color="white" />
-          <Text style={buttonStyles.btnPrimaryText}>Hubungi Penjahit</Text>
+          <Fontisto name="history" size={16} color="white" />
+          <Text style={buttonStyles.btnPrimaryText}>Riwayat Pekerjaan</Text>
         </Pressable>
       </ScrollView>
     </View>

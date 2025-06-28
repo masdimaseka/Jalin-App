@@ -5,19 +5,30 @@ import { View, Text, Image } from "react-native";
 
 type CardPenjahitProps = {
   nama: string;
-  lokasi: string;
+  alamat: string;
   dataPenjahit: any;
+  profileImg: string;
 };
 
-const CardPenjahit = ({ nama, lokasi, dataPenjahit }: CardPenjahitProps) => {
+const CardPenjahit = ({
+  nama,
+  alamat,
+  dataPenjahit,
+  profileImg,
+}: CardPenjahitProps) => {
   return (
     <View style={cardStyles.card}>
       <View>
         <Image
-          source={require("@/assets/images/avatar.png")}
+          source={
+            profileImg
+              ? { uri: profileImg }
+              : require("@/assets/images/avatar.png")
+          }
           style={{
             width: 80,
             height: 80,
+            borderRadius: 80,
           }}
         />
       </View>
@@ -39,13 +50,13 @@ const CardPenjahit = ({ nama, lokasi, dataPenjahit }: CardPenjahitProps) => {
           />
           <Text>{dataPenjahit.rataRataBiaya}</Text>
         </View>
-        <View style={cardStyles.cardContent}>
+        <View style={[cardStyles.cardContent, { alignItems: "flex-start" }]}>
           <FontAwesome6
             name="location-dot"
             size={12}
             style={{ color: colors.primary }}
           />
-          <Text>{lokasi}</Text>
+          <Text>{alamat}</Text>
         </View>
       </View>
     </View>

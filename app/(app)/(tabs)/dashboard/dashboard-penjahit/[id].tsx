@@ -5,15 +5,15 @@ import {
   Image,
   Pressable,
   ScrollView,
-  Alert,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/config/firebase";
 import cardStyles from "@/styles/CardStyles";
 import useFormattedDeadline from "@/hooks/useFormatedDeadline";
 import { useUserData } from "@/hooks/useUserData";
+import { Ionicons } from "@expo/vector-icons";
 import { containerStyles } from "@/styles/ContainerStyles";
 import { textStyles } from "@/styles/TextStyles";
 import { buttonStyles } from "@/styles/ButtonStyles";
@@ -23,7 +23,6 @@ export default function DetailPekerjaan() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { userData, loadingUserData } = useUserData();
 
@@ -34,7 +33,8 @@ export default function DetailPekerjaan() {
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
-          setData(docSnap.data());
+          const detail = docSnap.data();
+          setData(detail);
         } else {
           console.warn("Dokumen tidak ditemukan");
         }
@@ -45,42 +45,12 @@ export default function DetailPekerjaan() {
       }
     };
 
-    if (id) fetchDetail();
-  }, [id]);
-
-  const formatedDeadline = useFormattedDeadline(data?.deadline);
-
-  const handleSubmit = async () => {
-    if (!id) return;
-    setIsSubmitting(true);
-
-    try {
-      const docRef = doc(db, "jahitan", id);
-      await updateDoc(docRef, {
-        status: "diproses",
-        dataPenjahit: {
-          uid: userData?.uid,
-          nama: userData?.nama || "",
-          email: userData?.email || "",
-          noTelp: userData?.noTelp || "",
-          alamat: userData?.alamat || "",
-          profileImg: userData?.profileImg || "",
-        },
-      });
-
-      setData((prev: any) => ({
-        ...prev,
-        status: "diproses",
-        idPenjahit: userData?.uid,
-      }));
-
-      Alert.alert("Selamat", "Pekerjaan berhasil diambil!");
-    } catch (error) {
-      console.error("Gagal memperbarui status:", error);
-    } finally {
-      setIsSubmitting(false);
+    if (id && !loadingUserData && userData) {
+      fetchDetail();
     }
-  };
+  }, [id, userData, loadingUserData]);
+
+  const formattedDeadline = useFormattedDeadline(data?.deadline);
 
   if (loading || loadingUserData) {
     return (
@@ -142,15 +112,15 @@ export default function DetailPekerjaan() {
 
         <View style={cardStyles.card2}>
           <Text>
-            <Text style={[textStyles.subTitle]}>Status : </Text>
+            <Text style={[textStyles.subTitle]}>Status: </Text>
             {data?.status}
           </Text>
         </View>
 
         <View style={cardStyles.card2}>
           <Text>
-            <Text style={[textStyles.subTitle]}>Deadline : </Text>
-            {formatedDeadline}
+            <Text style={[textStyles.subTitle]}>Deadline: </Text>
+            {formattedDeadline}
           </Text>
         </View>
 
@@ -158,19 +128,11 @@ export default function DetailPekerjaan() {
           <Text style={[textStyles.subTitle]}>Alamat</Text>
           <Text>{data?.alamat}</Text>
         </View>
-
-        {data?.dataUser?.uid !== userData?.uid &&
-          userData?.role === "penjahit" &&
-          data?.status === "pending" && (
-            <Pressable style={buttonStyles.btnPrimary} onPress={handleSubmit}>
-              {isSubmitting ? (
-                <ActivityIndicator color="#fff" />
-              ) : (
-                <Text style={buttonStyles.btnPrimaryText}>Ambil pekerjaan</Text>
-              )}
-            </Pressable>
-          )}
       </ScrollView>
+      <Pressable style={[buttonStyles.btnPrimary, { marginTop: 24 }]}>
+        <Ionicons name="chatbubble-ellipses" size={16} color="white" />
+        <Text style={buttonStyles.btnPrimaryText}>Hubungi Customer</Text>
+      </Pressable>
     </View>
   );
 }
