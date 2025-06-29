@@ -22,6 +22,7 @@ type DataItemPekerjaan = {
   dataUser: any;
   dataPenjahit: any;
   alamat: string;
+  gambar: string;
 };
 
 export default function riwayat() {
@@ -67,19 +68,13 @@ export default function riwayat() {
         initialNumToRender={5}
         contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 100 }}
         renderItem={({ item }) => (
-          <Pressable
-            onPress={() =>
-              router.push({
-                pathname: "/(app)/(tabs)/dashboard/[id]",
-                params: { id: item.id },
-              })
-            }
-          >
+          <Pressable>
             <CardPekerjaan
               judul={item.judul}
               deadline={item.deadline}
               dataUser={item.dataUser}
               alamat={item.alamat}
+              gambar={item.gambar}
             />
           </Pressable>
         )}

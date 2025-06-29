@@ -97,4 +97,19 @@ export const buttonStyles = StyleSheet.create({
     color: "white",
     fontWeight: "bold",
   },
+  btnSuccess: {
+    backgroundColor: "#4CAF50",
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 16,
+    flexDirection: "row",
+    gap: 8,
+  },
+  btnSuccessText: {
+    color: "white",
+    fontWeight: "bold",
+  },
 });

@@ -15,6 +15,10 @@ export default function DashboardPenjahitLayout() {
         <Stack>
           <Stack.Screen name="index" options={{ headerShown: false }} />
           <Stack.Screen name="[id]" options={{ title: "Detail Pekerjaan" }} />
+          <Stack.Screen
+            name="finish-jahitan"
+            options={{ title: "Menyelesaikan Pekerjaan" }}
+          />
         </Stack>
       </SafeAreaView>
     </SafeAreaProvider>

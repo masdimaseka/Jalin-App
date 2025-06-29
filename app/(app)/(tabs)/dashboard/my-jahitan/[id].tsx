@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "@/config/firebase";
 import cardStyles from "@/styles/CardStyles";
 import useFormattedDeadline from "@/hooks/useFormatedDeadline";
@@ -27,30 +27,35 @@ export default function DetailPekerjaan() {
   const { userData, loadingUserData } = useUserData();
 
   useEffect(() => {
-    const fetchDetail = async () => {
-      try {
-        const docRef = doc(db, "jahitan", id);
-        const docSnap = await getDoc(docRef);
+    if (!id || loadingUserData || !userData) return;
 
+    const docRef = doc(db, "jahitan", id);
+
+    const unsubscribe = onSnapshot(
+      docRef,
+      (docSnap) => {
         if (docSnap.exists()) {
-          const detail = docSnap.data();
-          setData(detail);
+          setData(docSnap.data());
         } else {
           console.warn("Dokumen tidak ditemukan");
         }
-      } catch (error) {
+        setLoading(false);
+      },
+      (error) => {
         console.error("Gagal mengambil data:", error);
-      } finally {
         setLoading(false);
       }
-    };
+    );
 
-    if (id && !loadingUserData && userData) {
-      fetchDetail();
-    }
+    return () => unsubscribe();
   }, [id, userData, loadingUserData]);
 
   const formattedDeadline = useFormattedDeadline(data?.deadline);
+
+  let formattedFinished = "";
+  if (data?.status === "selesai") {
+    formattedFinished = useFormattedDeadline(data?.finishedAt);
+  }
 
   if (loading || loadingUserData) {
     return (
@@ -134,8 +139,34 @@ export default function DetailPekerjaan() {
           <Text style={[textStyles.subTitle]}>Alamat</Text>
           <Text>{data?.alamat}</Text>
         </View>
+
+        {data?.status === "selesai" && (
+          <View>
+            <Text
+              style={[textStyles.title, { marginTop: 12, marginBottom: 20 }]}
+            >
+              Pekerjaan Telah Selesai
+            </Text>
+            <Image
+              source={{ uri: data?.imageSelesai }}
+              style={{
+                width: "100%",
+                height: 200,
+                marginVertical: 10,
+                borderRadius: 10,
+              }}
+              resizeMode="cover"
+            />
+            <View style={cardStyles.card2}>
+              <Text>
+                <Text style={[textStyles.subTitle]}>Tanggal selesai : </Text>
+                {formattedFinished}
+              </Text>
+            </View>
+          </View>
+        )}
       </ScrollView>
-      {data?.dataPenjahit.uid && (
+      {data?.dataPenjahit.uid && data?.status !== "selesai" && (
         <Pressable style={[buttonStyles.btnPrimary, { marginVertical: 24 }]}>
           <Ionicons name="chatbubble-ellipses" size={16} color="white" />
           <Text style={buttonStyles.btnPrimaryText}>Hubungi Penjahit</Text>

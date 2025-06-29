@@ -4,6 +4,7 @@ import {
   ActivityIndicator,
   Pressable,
   FlatList,
+  ScrollView,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { collection, onSnapshot } from "firebase/firestore";
@@ -15,7 +16,7 @@ import { containerStyles } from "@/styles/ContainerStyles";
 import CardPekerjaan from "@/components/CardPekerjaan";
 import { textStyles } from "@/styles/TextStyles";
 import { buttonStyles } from "@/styles/ButtonStyles";
-import { Entypo, FontAwesome5 } from "@expo/vector-icons";
+import { Entypo, FontAwesome, FontAwesome5 } from "@expo/vector-icons";
 import cardStyles from "@/styles/CardStyles";
 
 type DataItemPekerjaan = {
@@ -53,7 +54,13 @@ export default function indexDashboardPenjahit() {
   }, []);
 
   const filteredDataAsPenjahit = data.filter(
-    (item) => item.dataPenjahit?.uid === userData?.uid
+    (item) =>
+      item.dataPenjahit?.uid === userData?.uid && item.status !== "selesai"
+  );
+
+  const filteredDataAsPenjahitFinished = data.filter(
+    (item) =>
+      item.dataPenjahit?.uid === userData?.uid && item.status === "selesai"
   );
 
   if (loading || loadingUserData) {
@@ -67,66 +74,105 @@ export default function indexDashboardPenjahit() {
   return (
     <View style={containerStyles.container}>
       <View style={buttonStyles.btnTabContainer}>
-        <Pressable
-          style={[
-            buttonStyles.btnTab,
-            show === "list"
-              ? buttonStyles.btnTabActive
-              : buttonStyles.btnTabInactive,
-          ]}
-          onPress={() => setShow("list")}
-        >
-          <FontAwesome5
-            name="tshirt"
-            size={16}
+        <ScrollView horizontal>
+          <Pressable
             style={[
+              buttonStyles.btnTab,
               show === "list"
-                ? buttonStyles.btnTabIconActive
-                : buttonStyles.btnTabIconInactive,
+                ? buttonStyles.btnTabActive
+                : buttonStyles.btnTabInactive,
+              {
+                marginRight: 8,
+              },
             ]}
-          />
-          <Text
-            style={[
-              buttonStyles.btnTabText,
-              show === "list"
-                ? buttonStyles.btnTabTextActive
-                : buttonStyles.btnTabTextInactive,
-            ]}
+            onPress={() => setShow("list")}
           >
-            Pekerjaan Saya
-          </Text>
-        </Pressable>
+            <FontAwesome5
+              name="tshirt"
+              size={16}
+              style={[
+                show === "list"
+                  ? buttonStyles.btnTabIconActive
+                  : buttonStyles.btnTabIconInactive,
+              ]}
+            />
+            <Text
+              style={[
+                buttonStyles.btnTabText,
+                show === "list"
+                  ? buttonStyles.btnTabTextActive
+                  : buttonStyles.btnTabTextInactive,
+              ]}
+            >
+              Pekerjaan Saya
+            </Text>
+          </Pressable>
 
-        <Pressable
-          style={[
-            buttonStyles.btnTab,
-            show === "profile"
-              ? buttonStyles.btnTabActive
-              : buttonStyles.btnTabInactive,
-          ]}
-          onPress={() => setShow("profile")}
-        >
-          <Entypo
-            name="briefcase"
-            size={16}
+          <Pressable
             style={[
-              show === "profile"
-                ? buttonStyles.btnTabIconActive
-                : buttonStyles.btnTabIconInactive,
+              buttonStyles.btnTab,
+              show === "selesai"
+                ? buttonStyles.btnTabActive
+                : buttonStyles.btnTabInactive,
+              {
+                marginRight: 8,
+              },
             ]}
-          />
-          <Text
-            style={[
-              buttonStyles.btnTabText,
-              show === "profile"
-                ? buttonStyles.btnTabTextActive
-                : buttonStyles.btnTabTextInactive,
-            ]}
+            onPress={() => setShow("selesai")}
           >
-            Profile
-          </Text>
-        </Pressable>
+            <FontAwesome
+              name="check-circle"
+              size={16}
+              style={[
+                show === "selesai"
+                  ? buttonStyles.btnTabIconActive
+                  : buttonStyles.btnTabIconInactive,
+              ]}
+            />
+            <Text
+              style={[
+                buttonStyles.btnTabText,
+                show === "selesai"
+                  ? buttonStyles.btnTabTextActive
+                  : buttonStyles.btnTabTextInactive,
+              ]}
+            >
+              Pekerjaan Selesai
+            </Text>
+          </Pressable>
+
+          <Pressable
+            style={[
+              buttonStyles.btnTab,
+              show === "profile"
+                ? buttonStyles.btnTabActive
+                : buttonStyles.btnTabInactive,
+            ]}
+            onPress={() => setShow("profile")}
+          >
+            <Entypo
+              name="briefcase"
+              size={16}
+              style={[
+                show === "profile"
+                  ? buttonStyles.btnTabIconActive
+                  : buttonStyles.btnTabIconInactive,
+              ]}
+            />
+            <Text
+              style={[
+                buttonStyles.btnTabText,
+                show === "profile"
+                  ? buttonStyles.btnTabTextActive
+                  : buttonStyles.btnTabTextInactive,
+              ]}
+            >
+              Profile
+            </Text>
+          </Pressable>
+        </ScrollView>
       </View>
+
       {show === "list" && (
         <>
           <Text style={[textStyles.title, { marginBottom: 20 }]}>
@@ -160,7 +206,47 @@ export default function indexDashboardPenjahit() {
             )}
             ListEmptyComponent={
               <Text style={{ textAlign: "center", marginTop: 20 }}>
-                Tidak ada hasil yang ditemukan
+                Tidak ada pekerjaan yang sedang berlangsung
+              </Text>
+            }
+          />
+        </>
+      )}
+
+      {show === "selesai" && (
+        <>
+          <Text style={[textStyles.title, { marginBottom: 20 }]}>
+            Daftar Jahitan Saya yang Selesai
+          </Text>
+          <FlatList
+            data={filteredDataAsPenjahitFinished}
+            keyExtractor={(item) => item.id}
+            initialNumToRender={5}
+            contentContainerStyle={{
+              paddingHorizontal: 16,
+              paddingBottom: 100,
+            }}
+            renderItem={({ item }) => (
+              <Pressable
+                onPress={() =>
+                  router.push({
+                    pathname: "/(app)/(tabs)/dashboard/dashboard-penjahit/[id]",
+                    params: { id: item.id },
+                  })
+                }
+              >
+                <CardPekerjaan
+                  judul={item.judul}
+                  deadline={item.deadline}
+                  dataUser={item.dataUser}
+                  alamat={item.alamat}
+                  gambar={item.gambar}
+                />
+              </Pressable>
+            )}
+            ListEmptyComponent={
+              <Text style={{ textAlign: "center", marginTop: 20 }}>
+                Tidak ada pekerjaan yang sudah selesai
               </Text>
             }
           />
@@ -173,7 +259,7 @@ export default function indexDashboardPenjahit() {
             Profile Penjahit Saya
           </Text>
 
-          <View style={[cardStyles.card2, { marginTop: 20 }]}>
+          <View style={[cardStyles.card2]}>
             <View
               style={{
                 paddingBottom: 16,
