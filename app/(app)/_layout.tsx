@@ -19,6 +19,7 @@ export default function AppLayout() {
           headerShown: true,
         }}
       />
+      <Stack.Screen name="chat" options={{ headerShown: false }} />
     </Stack>
   );
 }

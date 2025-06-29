@@ -13,8 +13,11 @@ export default function DashboardPenjahitLayout() {
         edges={["top"]}
       >
         <Stack>
-          <Stack.Screen name="index" options={{ headerShown: false }} />
-          <Stack.Screen name="[id]" options={{ headerShown: false }} />
+          <Stack.Screen name="index" options={{ title: "Detail Pekerjaan" }} />
+          <Stack.Screen
+            name="finish-jahitan"
+            options={{ title: "Menyelesaikan Pekerjaan" }}
+          />
         </Stack>
       </SafeAreaView>
     </SafeAreaProvider>

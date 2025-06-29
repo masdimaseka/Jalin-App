@@ -7,7 +7,7 @@ import {
   ScrollView,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "@/config/firebase";
 import cardStyles from "@/styles/CardStyles";
@@ -25,6 +25,8 @@ export default function DetailPekerjaan() {
   const [loading, setLoading] = useState(true);
 
   const { userData, loadingUserData } = useUserData();
+
+  const router = useRouter();
 
   useEffect(() => {
     if (!id || loadingUserData || !userData) return;
@@ -167,7 +169,15 @@ export default function DetailPekerjaan() {
         )}
       </ScrollView>
       {data?.dataPenjahit.uid && data?.status !== "selesai" && (
-        <Pressable style={[buttonStyles.btnPrimary, { marginVertical: 24 }]}>
+        <Pressable
+          style={[buttonStyles.btnPrimary, { marginVertical: 24 }]}
+          onPress={() => {
+            router.push({
+              pathname: "/(app)/chat",
+              params: { id },
+            });
+          }}
+        >
           <Ionicons name="chatbubble-ellipses" size={16} color="white" />
           <Text style={buttonStyles.btnPrimaryText}>Hubungi Penjahit</Text>
         </Pressable>

@@ -165,7 +165,15 @@ export default function DetailPekerjaan() {
 
       {data?.status !== "selesai" && (
         <View style={{ marginTop: 20 }}>
-          <Pressable style={[buttonStyles.btnPrimary]}>
+          <Pressable
+            style={[buttonStyles.btnPrimary]}
+            onPress={() => {
+              router.push({
+                pathname: "/(app)/chat",
+                params: { id },
+              });
+            }}
+          >
             <Ionicons name="chatbubble-ellipses" size={16} color="white" />
             <Text style={buttonStyles.btnPrimaryText}>Hubungi Customer</Text>
           </Pressable>
@@ -174,7 +182,7 @@ export default function DetailPekerjaan() {
             onPress={() => {
               router.push({
                 pathname:
-                  "/(app)/(tabs)/dashboard/dashboard-penjahit/finish-jahitan",
+                  "/(app)/(tabs)/dashboard/dashboard-penjahit/[id]/finish-jahitan",
                 params: { id },
               });
             }}
