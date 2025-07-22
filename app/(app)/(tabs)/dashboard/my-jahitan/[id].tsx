@@ -5,10 +5,11 @@ import {
   Image,
   Pressable,
   ScrollView,
+  Alert,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { doc, onSnapshot } from "firebase/firestore";
+import { doc, onSnapshot, deleteDoc } from "firebase/firestore";
 import { db } from "@/config/firebase";
 import cardStyles from "@/styles/CardStyles";
 import useFormattedDeadline from "@/hooks/useFormatedDeadline";
@@ -58,6 +59,29 @@ export default function DetailPekerjaan() {
   if (data?.status === "selesai") {
     formattedFinished = useFormattedDeadline(data?.finishedAt);
   }
+
+  const handleDelete = async () => {
+    Alert.alert(
+      "Konfirmasi Hapus",
+      "Apakah Anda yakin ingin menghapus pekerjaan ini?",
+      [
+        { text: "Batal", style: "cancel" },
+        {
+          text: "Hapus",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              await deleteDoc(doc(db, "jahitan", id));
+              router.replace("/(app)/(tabs)/dashboard/my-jahitan");
+            } catch (error) {
+              console.error("Gagal menghapus:", error);
+              Alert.alert("Error", "Terjadi kesalahan saat menghapus data.");
+            }
+          },
+        },
+      ]
+    );
+  };
 
   if (loading || loadingUserData) {
     return (
@@ -168,6 +192,7 @@ export default function DetailPekerjaan() {
           </View>
         )}
       </ScrollView>
+
       {data?.dataPenjahit.uid && data?.status !== "selesai" && (
         <Pressable
           style={[buttonStyles.btnPrimary, { marginVertical: 24 }]}
@@ -181,6 +206,34 @@ export default function DetailPekerjaan() {
           <Ionicons name="chatbubble-ellipses" size={16} color="white" />
           <Text style={buttonStyles.btnPrimaryText}>Hubungi Penjahit</Text>
         </Pressable>
+      )}
+
+      {data?.status === "pending" && (
+        <>
+          <Pressable
+            style={[buttonStyles.btnPrimary, { marginVertical: 12 }]}
+            onPress={() => {
+              router.push({
+                pathname: "/(app)/(tabs)/dashboard/my-jahitan/edit",
+                params: { id },
+              });
+            }}
+          >
+            <Ionicons name="create-outline" size={16} color="white" />
+            <Text style={buttonStyles.btnPrimaryText}>Edit Pekerjaan</Text>
+          </Pressable>
+
+          <Pressable
+            style={[
+              buttonStyles.btnPrimary,
+              { marginVertical: 12, backgroundColor: "red" },
+            ]}
+            onPress={handleDelete}
+          >
+            <Ionicons name="trash" size={16} color="white" />
+            <Text style={buttonStyles.btnPrimaryText}>Hapus Pekerjaan</Text>
+          </Pressable>
+        </>
       )}
     </View>
   );

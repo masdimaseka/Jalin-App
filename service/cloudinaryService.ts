@@ -1,5 +1,9 @@
-const CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/dlk6gmmpi/image/upload";
+const CLOUDINARY_URL = process.env.EXPO_PUBLIC_CLOUDINARY_URL;
 const UPLOAD_PRESET = "ml_default";
+
+if (!CLOUDINARY_URL) {
+  throw new Error("EXPO_PUBLIC_CLOUDINARY_URL is not configured");
+}
 
 export const uploadImageToCloudinary = async (
   imageUri: string,

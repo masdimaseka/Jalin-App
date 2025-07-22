@@ -23,6 +23,8 @@ export const useGetDateAndTime = () => {
   return {
     date,
     time,
+    setDate,
+    setTime,
     showDatePicker,
     showTimePicker,
     setShowDatePicker,

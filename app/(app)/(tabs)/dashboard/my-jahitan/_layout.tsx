@@ -15,6 +15,10 @@ export default function MyJahitanLayout() {
         <Stack>
           <Stack.Screen name="index" options={{ headerShown: false }} />
           <Stack.Screen name="[id]" options={{ title: "Detail Jahitan" }} />
+          <Stack.Screen
+            name="edit"
+            options={{ title: "Edit Detail Jahitan" }}
+          />
         </Stack>
       </SafeAreaView>
     </SafeAreaProvider>

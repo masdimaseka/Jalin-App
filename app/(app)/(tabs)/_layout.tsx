@@ -1,11 +1,12 @@
 import { colors } from "@/constant/theme";
-import { Tabs } from "expo-router";
+import { Tabs, useRouter } from "expo-router";
 import Fontisto from "@expo/vector-icons/Fontisto";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Entypo } from "@expo/vector-icons";
 
 const TabLayout = () => {
+  const router = useRouter();
   return (
     <Tabs
       screenOptions={{
@@ -28,6 +29,12 @@ const TabLayout = () => {
             <Fontisto size={size} name="home" color={color} />
           ),
         }}
+        listeners={{
+          tabPress: (e) => {
+            e.preventDefault();
+            router.replace("/(app)/(tabs)");
+          },
+        }}
       />
 
       <Tabs.Screen
@@ -36,6 +43,12 @@ const TabLayout = () => {
           tabBarIcon: ({ color, size }) => (
             <Entypo name="briefcase" size={size} color={color} />
           ),
+        }}
+        listeners={{
+          tabPress: (e) => {
+            e.preventDefault();
+            router.replace("/(app)/(tabs)/jahitan");
+          },
         }}
       />
 
@@ -46,6 +59,12 @@ const TabLayout = () => {
             <MaterialIcons name="people-alt" size={size} color={color} />
           ),
         }}
+        listeners={{
+          tabPress: (e) => {
+            e.preventDefault();
+            router.replace("/(app)/(tabs)/penjahit");
+          },
+        }}
       />
 
       <Tabs.Screen
@@ -54,6 +73,12 @@ const TabLayout = () => {
           tabBarIcon: ({ color, size }) => (
             <FontAwesome name="building" size={size} color={color} />
           ),
+        }}
+        listeners={{
+          tabPress: (e) => {
+            e.preventDefault();
+            router.replace("/(app)/(tabs)/dashboard");
+          },
         }}
       />
     </Tabs>
