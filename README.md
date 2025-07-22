@@ -1,12 +1,5 @@
 # Jalin App, for Mobile Programming Class 👋
 
-Team Project
-
-- Dimas Eka Putra Sahtio
-- I Komang Gede Pradnya Puspa Yuanantara
-- Ester Eunice Halim
-- Emerenciano Gilang Pratama
-
 # Welcome to your Expo app 👋
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
