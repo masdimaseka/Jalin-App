@@ -108,24 +108,6 @@ jalin-app/
 - `npm run lint` - Run ESLint for code quality
 - `npm run reset-project` - Reset to blank project template
 
-## 🏗️ Building for Production
-
-### Development Build
-```bash
-eas build --profile development
-```
-
-### Production Build
-```bash
-eas build --profile production
-```
-
-### Submit to App Stores
-```bash
-eas submit --platform ios
-eas submit --platform android
-```
-
 ## 🤝 Contributing
 
 1. Fork the repository
@@ -134,24 +116,6 @@ eas submit --platform android
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-## 📄 License
-
-This project is created for educational purposes as part of Mobile Programming Class.
-
-## 📞 Support
-
-For support and questions:
-- Create an issue in the repository
-- Contact the development team
-- Check the [Expo documentation](https://docs.expo.dev/)
-
-## 🙏 Acknowledgments
-
-- Expo team for the amazing development platform
-- Firebase for backend services
-- React Native community for excellent libraries
-- Mobile Programming Class instructors and students
-
 ---
 
-Made with ❤️ for Mobile Programming Class
+Made with ❤️
