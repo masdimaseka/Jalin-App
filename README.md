@@ -1,52 +1,201 @@
-# Jalin App, for Mobile Programming Class 👋
+# Jalin App 🧵
 
-# Welcome to your Expo app 👋
+**Jalin** is a mobile application that connects customers with professional tailors (penjahit) for custom sewing services. Built for Mobile Programming Class using React Native and Expo, this app provides a platform for seamless communication and service booking between clients and tailors.
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+## 📱 Features
 
-## Get started
+### For Customers
+- **Browse Tailors**: Find professional tailors in your area
+- **Job Posting**: Create custom sewing job requests with specifications
+- **Real-time Chat**: Communicate directly with tailors
+- **Image Upload**: Share reference images for custom work
+- **Location Services**: Find nearby tailors using GPS
+- **Profile Management**: Manage personal information and preferences
 
-1. Install dependencies
+### For Tailors
+- **Professional Profile**: Showcase skills and portfolio
+- **Job Management**: View and accept customer requests
+- **Dashboard**: Track ongoing projects and earnings
+- **Chat System**: Communicate with clients
+- **Work Gallery**: Display completed projects
 
+### General Features
+- **Authentication**: Secure login and registration
+- **Push Notifications**: Stay updated on job status
+- **Multi-platform**: iOS, Android, and Web support
+- **Offline Support**: Basic functionality without internet
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js (v16 or higher)
+- npm or yarn
+- Expo CLI
+- iOS Simulator or Android Emulator (for testing)
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd jalin-app
+   ```
+
+2. **Install dependencies**
    ```bash
    npm install
    ```
 
-2. Start the app
-
-   ```bash
-    npx expo start
+3. **Set up environment variables**
+   Create a `.env` file in the root directory and add your Firebase configuration:
+   ```env
+   EXPO_PUBLIC_FIREBASE_API_KEY=your_api_key
+   EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN=your_auth_domain
+   EXPO_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
+   EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET=your_storage_bucket
+   EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+   EXPO_PUBLIC_FIREBASE_APP_ID=your_app_id
+   EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID=your_measurement_id
    ```
 
-In the output, you'll find options to open the app in a
+4. **Start the development server**
+   ```bash
+   npx expo start
+   ```
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+5. **Run on your preferred platform**
+   - Press `i` for iOS simulator
+   - Press `a` for Android emulator
+   - Press `w` for web browser
+   - Scan QR code with Expo Go app on your device
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## 🛠️ Tech Stack
 
-## Get a fresh project
+### Frontend
+- **React Native**: Cross-platform mobile development
+- **Expo**: Development platform and tools
+- **TypeScript**: Type-safe JavaScript
+- **Expo Router**: File-based navigation
 
-When you're ready, run:
+### Backend & Services
+- **Firebase**: Authentication and real-time database
+- **Firestore**: NoSQL document database
+- **Cloudinary**: Image storage and optimization
+- **Expo Location**: GPS and location services
 
-```bash
-npm run reset-project
+### UI/UX
+- **React Native Reanimated**: Smooth animations
+- **Expo Vector Icons**: Comprehensive icon library
+- **React Native Maps**: Interactive maps
+- **Custom Styling**: Responsive design system
+
+## 📁 Project Structure
+
+```
+jalin-app/
+├── app/                    # Main application routes
+│   ├── (app)/             # Protected app routes
+│   │   ├── (tabs)/        # Tab navigation
+│   │   │   ├── dashboard/ # Dashboard features
+│   │   │   ├── jahitan/   # Sewing job management
+│   │   │   └── penjahit/  # Tailor features
+│   │   ├── chat.tsx       # Chat functionality
+│   │   └── profile.tsx    # User profile
+│   ├── (auth)/            # Authentication routes
+│   │   ├── login.tsx      # Login screen
+│   │   ├── signup.tsx     # Registration screen
+│   │   └── create-profile.tsx # Profile setup
+│   └── _layout.tsx        # Root layout
+├── components/            # Reusable UI components
+│   ├── CardPekerjaan.tsx  # Job card component
+│   ├── CardPenjahit.tsx   # Tailor card component
+│   ├── Header.tsx         # App header
+│   ├── SearchInput.tsx    # Search functionality
+│   └── MessageList.tsx    # Chat messages
+├── config/                # Configuration files
+│   └── firebase.ts        # Firebase setup
+├── hooks/                 # Custom React hooks
+├── service/               # External services
+│   └── cloudinaryService.ts # Image upload service
+├── styles/                # Styling system
+├── constant/              # App constants
+├── context/               # React context providers
+├── assets/                # Images and static files
+└── android/               # Android-specific files
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## 🎯 Usage
 
-## Learn more
+### For Customers
+1. **Register/Login**: Create an account or sign in
+2. **Create Profile**: Set up your customer profile
+3. **Browse Tailors**: Explore available tailors in your area
+4. **Post Job**: Create a new sewing job with details and images
+5. **Chat**: Communicate with interested tailors
+6. **Track Progress**: Monitor your job status in the dashboard
 
-To learn more about developing your project with Expo, look at the following resources:
+### For Tailors
+1. **Register as Tailor**: Sign up and complete tailor verification
+2. **Set Up Shop**: Create your professional profile with portfolio
+3. **Browse Jobs**: View available sewing jobs
+4. **Accept Work**: Respond to job postings
+5. **Manage Projects**: Track ongoing work in your dashboard
+6. **Communicate**: Chat with clients about project details
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## 🔧 Available Scripts
 
-## Join the community
+- `npm start` - Start the Expo development server
+- `npm run android` - Run on Android device/emulator
+- `npm run ios` - Run on iOS simulator
+- `npm run web` - Run in web browser
+- `npm test` - Run the test suite
+- `npm run lint` - Run ESLint for code quality
+- `npm run reset-project` - Reset to blank project template
 
-Join our community of developers creating universal apps.
+## 🏗️ Building for Production
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+### Development Build
+```bash
+eas build --profile development
+```
+
+### Production Build
+```bash
+eas build --profile production
+```
+
+### Submit to App Stores
+```bash
+eas submit --platform ios
+eas submit --platform android
+```
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is created for educational purposes as part of Mobile Programming Class.
+
+## 📞 Support
+
+For support and questions:
+- Create an issue in the repository
+- Contact the development team
+- Check the [Expo documentation](https://docs.expo.dev/)
+
+## 🙏 Acknowledgments
+
+- Expo team for the amazing development platform
+- Firebase for backend services
+- React Native community for excellent libraries
+- Mobile Programming Class instructors and students
+
+---
+
+Made with ❤️ for Mobile Programming Class
